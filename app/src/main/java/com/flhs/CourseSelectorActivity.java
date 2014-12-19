@@ -1,6 +1,5 @@
 package com.flhs;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -132,7 +131,7 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
             if(CoursePreferences.getBoolean("Course"+ (courseIndex + 1) + "Alt", false)) {
                 CourseAltToggles[courseIndex].setChecked(true);
                 CourseAltToggles[courseIndex].setText("Alternating Course " + (courseIndex + 1) );
-                CourseEditTexts[courseIndex].setVisibility(View.GONE);
+                CourseEditTexts[courseIndex].setVisibility(View.VISIBLE);
             }
         }
 
