@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF0000" >
+
+    
+
+    <TextView
+        android:id="@+id/courseName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Course Name"
+        android:textSize="36sp"
+        android:textColor="@color/black"
+        android:singleLine="true" />
+    <TextView
+        android:id="@+id/times"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/courseName"
+        android:layout_centerHorizontal="true"
+        android:text="Times Should Go Here....."
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+</RelativeLayout>

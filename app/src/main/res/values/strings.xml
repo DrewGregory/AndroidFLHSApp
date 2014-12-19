@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_announcement">Announcements</string>
+    <string name="title_activity_course_selector">Course Settings</string>
+    <string name="app_name">FLHS Info</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="hello">Hello World, FLCSC_AnnouncementsActivity!</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_activity_lunch_menu">Lunch Menu</string>
+    <string name="title_activity_flhsnews">FLHSNews</string>
+    <string name="title_activity_sports_navigation">Sports</string>
+    <string name="title_activity_calendar">Calendar</string>
+    <string name="title_activity_schedule">Bell Schedules</string>
+    <string name="title_activity_announcements">Announcements</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="app_version">1.0</string>
+    <string name="drawer_open">FLHS Menu</string>
+    <string name="drawer_close">Dont Display This</string>
+
+    <string-array name="lunch_items">
+        <item>Early Lunch</item>
+        <item>Middle Lunch</item>
+        <item>Late Lunch</item>
+    </string-array>
+    <string-array name="Days">
+        <item>Day A</item>
+        <item>Day B</item>
+        <item>Day C</item>
+        <item>Day D</item>
+        <item>Day E</item>
+        <item>Day 1</item>
+        <item>Day 2</item>
+        <item>Day 3</item>
+        <item>Day 4</item>
+        <item>Day 5</item>
+    </string-array>
+
+    <string name="title_activity_temp_sports">Sports</string>
+
+</resources>

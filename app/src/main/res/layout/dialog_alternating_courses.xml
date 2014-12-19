@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollView" >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="638dp">
+
+
+
+
+        <!--<Switch
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="P.E./Lab Course"
+            android:id="@+id/PESwitch"
+            android:layout_alignParentStart="true"
+            android:checked="false"
+            android:layout_margin="6sp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="NameOfScienceLab"
+            android:layout_margin="8sp"
+            android:ems="10"
+            android:id="@+id/lab_name"
+            android:layout_below="@+id/PESpinner"
+            android:layout_alignEnd="@+id/PESwitch" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="You have P.E. on which day:"
+            android:id="@+id/PETextView"
+            android:layout_below="@+id/PESwitch"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_alignBottom="@+id/PESpinner" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/PESpinner"
+            android:layout_below="@+id/PESwitch"
+            android:layout_toEndOf="@+id/PETextView" /> -->
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/vertspacing"
+            android:background="@color/red"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/red_separator"
+            android:layout_margin="10sp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/red_separator"
+            android:inputType="textPersonName"
+            android:text="1st Alternating Course Name"
+            android:id="@+id/firstAlternatingCourseName"
+            android:layout_alignRight="@+id/red_separator"
+            android:layout_alignEnd="@+id/red_separator"
+            android:layout_alignLeft="@+id/red_separator"
+            android:layout_alignStart="@+id/red_separator" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Which days do you have this course?"
+            android:id="@+id/AltCourse1Question"
+            android:layout_below="@+id/firstAlternatingCourseName" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="600dp"
+            android:id="@+id/AlternatingCourse1DaySpinner"
+            android:layout_below="@+id/AltCourse1Question" />
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/vertspacing"
+            android:background="@color/red"
+            android:layout_below="@id/AlternatingCourse1DaySpinner"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/red_separator2"
+            android:layout_margin="10sp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text="2nd Alternating Course Name"
+            android:ems="10"
+            android:id="@+id/secondAlternatingCourseName"
+            android:layout_below="@+id/red_separator2"
+            android:layout_alignLeft="@+id/red_separator2"
+            android:layout_alignStart="@+id/red_separator2"
+            android:layout_alignRight="@+id/red_separator2"
+            android:layout_alignEnd="@+id/red_separator2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Which days do you have this course?"
+            android:id="@+id/AltCourse2Question"
+            android:layout_below="@id/secondAlternatingCourseName" />
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="600dp"
+            android:id="@+id/AlternatingCourse2DaySpinner"
+            android:layout_below="@+id/AltCourse2Question" />
+
+
+
+    </RelativeLayout>
+
+</ScrollView>

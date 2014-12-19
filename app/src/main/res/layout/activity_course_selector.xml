@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/LinearLayout1"
+    android:clickable="true"
+    android:padding="2sp">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Name your courses to customize  your schedule."
+        android:id="@+id/textView"
+        android:singleLine="false"
+        android:focusable="true" />
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView2"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 1:"
+                    android:id="@+id/course1" />
+
+                <EditText
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25sp"
+                    android:id="@+id/Course1Name"
+                    android:background="@color/gray"
+                    android:inputType="textPersonName"
+                    android:hint="Write Name Here....."
+                    android:layout_margin="1sp" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course1AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/linearLayout"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 2:"
+                    android:id="@+id/PETextView" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="25sp"
+                    android:inputType="textPersonName"
+                    android:id="@+id/Course2Name"
+                    android:background="@color/gray"
+                    android:layout_margin="1sp"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course2AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/linearLayout2"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 3:"
+                    android:id="@+id/textView3" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="25sp"
+                    android:inputType="textPersonName"
+                    android:id="@+id/Course3Name"
+                    android:background="@color/gray"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course3AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:id="@+id/linearLayout3"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 4:"
+                    android:id="@+id/textView4" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="25sp"
+                    android:id="@+id/Course4Name"
+                    android:background="@color/gray"
+                    android:layout_margin="1sp"
+                    android:inputType="textPersonName"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course4AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:id="@+id/linearLayout4"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 5:"
+                    android:id="@+id/textView5" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="25sp"
+                    android:id="@+id/Course5Name"
+                    android:background="@color/gray"
+                    android:inputType="textPersonName"
+                    android:layout_margin="1sp"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course5AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:id="@+id/linearLayout10"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 6:"
+                    android:id="@+id/textView12" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="25sp"
+                    android:id="@+id/Course6Name"
+                    android:inputType="textPersonName"
+                    android:background="@color/gray"
+                    android:layout_margin="1sp"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course6AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:id="@+id/linearLayout11"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 7:"
+                    android:id="@+id/textView13" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="25sp"
+                    android:inputType="textPersonName"
+                    android:id="@+id/Course7Name"
+                    android:background="@color/gray"
+                    android:layout_margin="1sp"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course7AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:layout_margin="2sp"
+                android:id="@+id/linearLayout12"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Course 8:"
+                    android:id="@+id/textView14" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="25sp"
+                    android:inputType="textPersonName"
+                    android:id="@+id/Course8Name"
+                    android:background="@color/gray"
+                    android:layout_margin="1sp"
+                    android:layout_weight="1" />
+
+                <ToggleButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textOn="Alt"
+                    android:textOff="Alt"
+                    android:id="@+id/Course8AltToggle"
+                    android:checked="false"
+                    android:onClick="onAltToggleClick" />
+            </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See Schedule"
+                android:id="@+id/Finish"
+                android:layout_gravity="center_horizontal"
+                android:onClick="SeeSchedule" />
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressBar"
+                android:layout_gravity="center_horizontal"
+                android:visibility="invisible"
+                android:indeterminate="true" />
+        </LinearLayout>
+
+
+
+    </ScrollView>
+
+
+
+
+</LinearLayout>

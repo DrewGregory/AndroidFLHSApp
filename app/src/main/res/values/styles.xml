@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <!-- <item name="android:actionBarStyle">@style/mActionBarStyle</item> -->
+    </style>
+    <style name="mActionBarStyle" parent="android:Widget.Holo.Light.ActionBar">
+        <item name="android:background">#E2291F</item>
+    </style>
+</resources>

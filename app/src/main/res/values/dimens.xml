@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="headerpt">30sp</dimen>
+    <dimen name="vertspacing">8sp</dimen>
+    <dimen name="event_desc_pt">46sp</dimen>
+    <dimen name="event_time_pt">10pt</dimen>
+    <dimen name="schedule_text_size">20sp</dimen>
+</resources>

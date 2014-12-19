@@ -1,0 +1,14 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:FLHS="http://schemas.android.com/apk/res/android" >
+    <item
+        android:id="@+id/home_icon"
+        android:title="Home"
+        android:icon="@drawable/home_red"
+        FLHS:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/info_icon"
+        android:title="Info"
+        android:icon="@drawable/ic_action_about"
+        FLHS:showAsAction="ifRoom" />
+
+</menu>
