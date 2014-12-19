@@ -9,12 +9,12 @@ android {
         minSdkVersion 16
         targetSdkVersion 20
         versionCode 4
-        versionName "1.1.2f"
+        versionName "1.1.2"
     }
     buildTypes {
         release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }
