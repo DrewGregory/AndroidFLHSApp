@@ -3,14 +3,10 @@ package com.flhs;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import com.flhs.utils.DayPickerFragment;
 import com.flhs.utils.LunchPickerFragment;
 import com.flhs.utils.ParserA;
-import com.parse.ConfigCallback;
-import com.parse.ParseConfig;
-import com.parse.ParseException;
-
+import com.parse.ParseConfig;;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -26,13 +22,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.DayPickerListener, LunchPickerFragment.LunchPickerListener {
     private static String LUNCH_TYPE = "Lunch Type";
 
 
-    int[][] FLHSDays = new int[13][32];
+    String[][] FLHSDays = new String[13][32];
 
     /* Here is where I store the dates for the upcoming school days in the calendar........ I'll have to update this frequently....
                 *   Day A == 1
@@ -71,23 +70,14 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     String[] halfDayTimes = {"7:45 - 7:59", "8:04 - 8:18", "8:23 - 8:37", "8:42 - 8:56", "9:01 - 9:15", "9:20 - 9:34", "9:39 - 9:53", "9:58 - 10:12"};
     String[] halfDayCourses = {"Course 1", "Course 2", "Course 3", "Course 4", "Course 5", "Course 6", "Course 7", "Course 8"};
     SharedPreferences.Editor lunchTypeEditor;
-    SharedPreferences lunchType, dayType;
-    int SchoolDay;
+    SharedPreferences lunchType, prefs;
     ListView content;
     String scheduleType;
     //Button DateButton;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     /* Lunch Types are 0, 1, and 2, while Day Types are 1, 2, 3, 4, 5, 6, 7, 8, 9, and 10 */
-
-
-
-
-
-
         setContentView(R.layout.activity_schedule);
         SetupNavDrawer();
         content = (ListView) findViewById(R.id.contentListView);
@@ -95,109 +85,51 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         ArrayAdapter<String> EmptySchedule = new ArrayAdapter<String>(ScheduleActivity.this, android.R.layout.simple_list_item_1, loadScheduleStrings);
         content.setAdapter(EmptySchedule);
         //DateButton = (Button) findViewById(R.id.dateButton);
-
-
-
-
-
         ParseConfig config = ParseConfig.getCurrentConfig();
         scheduleType = config.getString("ScheduleType");
         Date theCurrentTime = new Date();
         SimpleDateFormat mySDF = new SimpleDateFormat("d");
-
-
         int mDate = Integer.parseInt(mySDF.format(theCurrentTime));
-        dayType = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
-
-
-
+        prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
         int mMonth =  Integer.parseInt(new SimpleDateFormat("M").format(theCurrentTime));
-
         //DateButton.setText(mMonth + "/" + mDate);
         lunchType = getSharedPreferences(LUNCH_TYPE, MODE_PRIVATE);
         Button DayTitle = (Button) findViewById(R.id.DayTitle);
-        SharedPreferences.Editor dayTypeEditor = dayType.edit();
-        FLHSDays[11][5] = 3;
-        FLHSDays[11][6] = 4;
-        FLHSDays[11][7] = 5;
-        FLHSDays[11][10] = 6;
-        FLHSDays[11][12] = 7;
-        FLHSDays[11][13] = 8;
-        FLHSDays[11][14] = 4;
-        FLHSDays[11][17] = 1;
-        FLHSDays[11][18] = 2;
-        FLHSDays[11][19] = 3;
-        FLHSDays[11][20] = 4;
-        FLHSDays[11][21] = 5;
-        FLHSDays[11][24] = 5;
-        FLHSDays[11][25] = 10;
-        FLHSDays[11][26] = 10;
-        FLHSDays[12][1] = 6;
-        FLHSDays[12][2] = 7;
-        FLHSDays[12][3] = 8;
-        FLHSDays[12][4] = 9;
-        FLHSDays[12][5] = 10;
-        FLHSDays[12][8] = 1;
-        FLHSDays[12][9] = 2;
-        FLHSDays[12][10] = 3;
-        FLHSDays[12][11] = 4;
-        FLHSDays[12][12] = 5;
-        FLHSDays[12][15] = 6;
-        FLHSDays[12][16] = 7;
-        FLHSDays[12][17] = 8;
-        FLHSDays[12][18] = 9;
-        FLHSDays[12][19] = 10;
-        FLHSDays[1][5] = 1;
-        FLHSDays[1][6] = 2;
-        FLHSDays[1][7] = 3;
-        FLHSDays[1][8] = 4;
-        FLHSDays[1][9] = 5;
-        FLHSDays[1][12] = 6;
-        FLHSDays[1][13] = 7;
-        FLHSDays[1][14] = 8;
-        FLHSDays[1][15] = 9;
-        FLHSDays[1][16] = 10;
-        FLHSDays[1][20] = 1;
-        FLHSDays[1][21] = 2;
-        FLHSDays[1][22] = 3;
-        FLHSDays[1][23] = 4;
-        FLHSDays[1][26] = 6;
-        FLHSDays[1][27] = 7;
-        FLHSDays[1][28] = 8;
-        FLHSDays[1][29] = 9;
-        FLHSDays[1][30] = 10;
-        if (!(dayType.getInt("Last Time Changed", 0) == (mDate))) {
-            dayTypeEditor.putInt(DAY_TYPE, FLHSDays[mMonth][mDate]);
+        SharedPreferences.Editor dayTypeEditor = prefs.edit();
+        FLHSDays[1][6] = "B";
+        FLHSDays[1][7] = "C";
+        FLHSDays[1][8] = "D";
+        FLHSDays[1][9] = "E";
+        FLHSDays[1][12] = "1";
+        FLHSDays[1][13] = "2";
+        FLHSDays[1][14] = "3";
+        FLHSDays[1][15] = "4";
+        FLHSDays[1][16] = "5";
+        FLHSDays[1][20] = "A";
+        FLHSDays[1][21] = "B";
+        FLHSDays[1][22] = "C";
+        FLHSDays[1][23] = "D";
+        FLHSDays[1][26] = "1";
+        FLHSDays[1][27] = "2";
+        FLHSDays[1][28] = "3";
+        FLHSDays[1][29] = "4";
+        FLHSDays[1][30] = "5";
+        if (!(prefs.getInt("Last Time Changed", 0) == (mDate))) {
+            dayTypeEditor.putString(DAY_TYPE, FLHSDays[mMonth][mDate]);
             dayTypeEditor.commit();
         }
-
-
-
-
-
-
-
-
-
-
         if (scheduleType.equals("Normal")) {
-
-
-                DayTitle.setText("Day: " + ParserA.parseNumToDay(dayType.getInt(DAY_TYPE, 0)));
-                if (dayType.getInt(DAY_TYPE, 0) != 0) {
-                    if (lunchType.getInt(Days[dayType.getInt(DAY_TYPE, 1) - 1], -1) != -1) {
-                        loadNormalSchedule(lunchType.getInt(Days[dayType.getInt(DAY_TYPE, 1) - 1], -1), dayType.getInt(DAY_TYPE, 0));
-
+            String dayType = prefs.getString(DAY_TYPE, "Unknown");
+                DayTitle.setText("Day: " + dayType);
+                if (!dayType.equals("Unknown")) {
+                    if (lunchType.getInt(dayType, -1) != -1) {
+                        loadNormalSchedule(lunchType.getInt(dayType, -1), dayType);
                     } else {
-
                         LunchPickerFragment LunchSelector = new LunchPickerFragment();
                         LunchSelector.show(getFragmentManager(), "Unknown Lunch");
                     }
                 }
-
-
         }
-        dayTypeEditor.apply();
         if(scheduleType.equals("Collaborative")) {
             String[] CourseScheduleToPrint = collabCourses;
             String[] TimeScheduleToPrint = collabTimes;
@@ -210,7 +142,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         if(scheduleType.equals("Advisory")) {
             String[] CourseScheduleToPrint = {"Unknown Schedule."};
             String[] TimeScheduleToPrint = {"Unknown Times"};
-            int selectedLunch = lunchType.getInt(Days[dayType.getInt(DAY_TYPE, 1) - 1], - 1);
+            int selectedLunch = lunchType.getInt(prefs.getString(DAY_TYPE, "Unknown"), - 1);
             DayTitle.setText("Day: Advisory");
             if (selectedLunch != - 1) {
                 if (selectedLunch == 0) {
@@ -225,13 +157,11 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                     CourseScheduleToPrint = advLunch3Courses;
                     TimeScheduleToPrint = advLunch3Times;
                 }
-
             }
             else {
                 LunchPickerFragment LunchSelector = new LunchPickerFragment();
                 LunchSelector.show(getFragmentManager(), "Unknown Lunch");
             }
-
             ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
             content.setAdapter(adapter);
         }
@@ -239,16 +169,33 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             String[] TimeScheduleToPrint = halfDayTimes;
             String[] CourseScheduleToPrint = halfDayCourses;
             DayTitle.setText("Day: Half Day");
-            int typeOfDay = FLHSDays[mMonth][mDate];
-            dayTypeEditor.putInt(DAY_TYPE, FLHSDays[mMonth][mDate]);
-            dayTypeEditor.commit();
             ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
             content.setAdapter(adapter);
-
         }
-
-
+        if(scheduleType.equals("Special Day")) {
+            DayTitle.setText("Special Day " + ParserA.parseNumToDay(prefs.getInt(DAY_TYPE, 0)));
+            Button switchLunch = (Button) findViewById(R.id.switch_lunch);
+            switchLunch.setVisibility(View.INVISIBLE); //Switch this when you figure out lunch compatibility....
+            JSONArray jsonTimes = config.getJSONArray("SpecialDayTimes", null);
+            String[] TimeScheduleToPrint = new String[jsonTimes.length()];
+            JSONArray jsonCourses = config.getJSONArray("SpecialDayCourses", null);
+            String[] CourseScheduleToPrint = new String[jsonCourses.length()];
+            for(int index = 0; index < jsonTimes.length(); index++ ) {
+                try {
+                TimeScheduleToPrint[index] = jsonTimes.getString(index);
+                CourseScheduleToPrint[index] = jsonCourses.getString(index);
+                }
+                catch (JSONException ex) {
+                    break;
+                }
+            }
+            dayTypeEditor.putString(DAY_TYPE, FLHSDays[mMonth][mDate]);
+            dayTypeEditor.apply();
+            ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
+            content.setAdapter(adapter);
+        }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -281,31 +228,33 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         return super.onOptionsItemSelected(item);
     }
 
+
     public void switch_lunch(View v) {
         LunchPickerFragment LunchSelector = new LunchPickerFragment();
         LunchSelector.show(getFragmentManager(), "Unknown Lunch");
     }
 
-    public void loadNormalSchedule(int Lunch, int SchoolDay) {
+
+    public void loadNormalSchedule(int Lunch, String SchoolDay) {
         String[] TimeScheduleToPrint = Lunch1Times;
 
         String[] CourseScheduleToPrint = null;
-        if ((SchoolDay == 1) || (SchoolDay == 6)) {
+        if ((SchoolDay.equals("A")) || (SchoolDay.equals("1"))) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day1Lunch1Courses, Lunch);
         }
-        if (SchoolDay == 2 || SchoolDay == 7) {
+        if (SchoolDay.equals("B") || SchoolDay.equals("2")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day2Lunch1Courses, Lunch);
         }
-        if (SchoolDay == 3 || SchoolDay == 8) {
+        if (SchoolDay.equals("C") || SchoolDay.equals("3")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day3Lunch1Courses, Lunch);
         }
-        if (SchoolDay == 4 || SchoolDay == 9) {
+        if (SchoolDay.equals("D") || SchoolDay.equals("4")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day4Lunch1Courses, Lunch);
         }
-        if (SchoolDay == 5 || SchoolDay == 10) {
+        if (SchoolDay.equals("E") || SchoolDay.equals("5")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, Lunch);
         }
-        if ((SchoolDay < 5 && SchoolDay > 0) || (SchoolDay > 5 && SchoolDay < 10)) {
+        if (!(SchoolDay.equals("E") && SchoolDay.equals("5"))) {
             switch (Lunch) {
                 case 0:
                     TimeScheduleToPrint = Lunch1Times;
@@ -319,7 +268,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
 
             }
         }
-        if (SchoolDay == 5 || SchoolDay == 10) {
+        if (SchoolDay.equals("E") || SchoolDay.equals("5")) {
             switch (Lunch) {
                 case 0:
                     TimeScheduleToPrint = day5Lunch1Times;
@@ -343,11 +292,9 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     @Override
     public void onLunchPickPositiveClick(DialogFragment dialog, int selectedLunch) {
         lunchTypeEditor = lunchType.edit();
-        lunchTypeEditor.putInt(Days[dayType.getInt(DAY_TYPE, 1) - 1], selectedLunch);
+        lunchTypeEditor.putInt(prefs.getString(DAY_TYPE, "Unknown"), selectedLunch);
         lunchTypeEditor.commit();
         startActivity(new Intent(ScheduleActivity.this, ScheduleActivity.class));
-
-
     }
 
     @Override
@@ -358,14 +305,10 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
 
     @Override
     public void onDayPickPositiveClick(int DayNum) {
-        SharedPreferences.Editor editor = dayType.edit();
-        editor.putInt(DAY_TYPE, DayNum);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(DAY_TYPE, ParserA.parseNumToDay(DayNum));
         editor.putInt("Last Time Changed", Integer.parseInt(new SimpleDateFormat("d").format(new Date())));
         editor.commit();
-
-
-
-
         startActivity(new Intent(ScheduleActivity.this, ScheduleActivity.class));
     }
 
@@ -394,7 +337,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.schedule_lv_item, parent, false);
             TextView CourseSpot = (TextView) rowView.findViewById(R.id.courseName);
-            CourseSpot.setText(CoursePreferences.getString(courses[position] + "Day" + ParserA.parseIntDayToDay(dayType.getInt(DAY_TYPE, 1)), courses[position]));
+            CourseSpot.setText(CoursePreferences.getString(courses[position] + "Day" + prefs.getString(DAY_TYPE, "Unknown"), courses[position]));
             TextView TimeSpot = (TextView) rowView.findViewById(R.id.times);
             TimeSpot.setText(times[position]);
             if (position % 2 == 0) {
@@ -403,6 +346,5 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             return rowView;
 
         }
-
     }
 }

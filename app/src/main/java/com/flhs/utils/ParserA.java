@@ -6,8 +6,6 @@ package com.flhs.utils;
 
 
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -17,9 +15,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class ParserA {
-	Document cal = null;
-
-
 	public static String integerMonthToString(int month) {
 		String monthString;
 		switch (month) {
@@ -85,8 +80,7 @@ public class ParserA {
 
 	}
 	public static ArrayList<SportEvent> printSportsToday() {
-		ArrayList<SportEvent> SportsNewsEvents = new ArrayList<SportEvent>(); 
-		Formatter snf = new Formatter();
+		ArrayList<SportEvent> SportsNewsEvents;
 		String url = "http://sportspak.swboces.org/sportspak/oecgi3.exe/O4W_SPAKONLINE_HOME"; //Day, Month, Year, 0 if I want today's..... Change 13 to 0 after testing....
 		try {
 			Document SportsFormatToPrintWebpage = Jsoup.connect(url).get();
@@ -147,7 +141,6 @@ public class ParserA {
 			String Lunch = Lunch1Schedule[3];
 			String FirstClass = Lunch1Schedule[4];
 			String SecondClass = Lunch1Schedule[5];
-            Log.i("Schedule:", Lunch + " " + FirstClass + " " + SecondClass);
 			if (LunchNum == 1) {
 				ParsedSchedule[3] = FirstClass;
 				ParsedSchedule[4] = Lunch;
@@ -188,57 +181,4 @@ public class ParserA {
                 return "Unknown";
         }
     }
-	public static int ParseDayOfWeekToInt (String fullDayOfWeek) {
-		if (fullDayOfWeek.equals("Monday")) {
-			return 1;
-		}
-		if(fullDayOfWeek.equals("Tuesday")) {
-			return 2;
-		}
-		if(fullDayOfWeek.equals("Wednesday")) {
-			return 3;
-		}
-		if(fullDayOfWeek.equals("Thursday")) {
-			return 4;
-		}
-		if(fullDayOfWeek.equals("Friday")) {
-			return 5;
-		}
-		if(fullDayOfWeek.equals("Saturday")) {
-			return 6;
-		}
-		return 7;
-			
-	}
-
-    public static String parseIntDayToDay(int day) {
-        switch (day) {
-            case 1:
-                return "A";
-            case 2:
-                return "B";
-            case 3:
-                return "C";
-            case 4:
-                return "D";
-            case 5:
-                return "E";
-            case 6:
-                return "1";
-            case 7:
-                return "2";
-            case 8:
-                return "3";
-            case 9:
-                return "4";
-            case 10:
-                return "5";
-        }
-        return null;
-    }
-
-
-
-
-
 }
