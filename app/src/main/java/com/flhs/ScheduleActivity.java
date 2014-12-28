@@ -3,10 +3,11 @@ package com.flhs;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import com.flhs.utils.DayPickerFragment;
 import com.flhs.utils.LunchPickerFragment;
 import com.flhs.utils.ParserA;
-import com.parse.ParseConfig;;
+import com.parse.ParseConfig;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -23,16 +24,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
 public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.DayPickerListener, LunchPickerFragment.LunchPickerListener {
     private static String LUNCH_TYPE = "Lunch Type";
-
-
-    String[][] FLHSDays = new String[13][32];
-
     /* Here is where I store the dates for the upcoming school days in the calendar........ I'll have to update this frequently....
                 *   Day A == 1
                 *   Day B == 2
@@ -73,6 +69,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     SharedPreferences lunchType, prefs;
     ListView content;
     String scheduleType;
+
     //Button DateButton;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,49 +85,44 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         ParseConfig config = ParseConfig.getCurrentConfig();
         scheduleType = config.getString("ScheduleType");
         Date theCurrentTime = new Date();
-        SimpleDateFormat mySDF = new SimpleDateFormat("d");
-        int mDate = Integer.parseInt(mySDF.format(theCurrentTime));
+        int mDate = Integer.parseInt(new SimpleDateFormat("dd").format(theCurrentTime));
         prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
-        int mMonth =  Integer.parseInt(new SimpleDateFormat("M").format(theCurrentTime));
+        int mMonth = Integer.parseInt(new SimpleDateFormat("MM").format(theCurrentTime));
         //DateButton.setText(mMonth + "/" + mDate);
         lunchType = getSharedPreferences(LUNCH_TYPE, MODE_PRIVATE);
         Button DayTitle = (Button) findViewById(R.id.DayTitle);
         SharedPreferences.Editor dayTypeEditor = prefs.edit();
-        FLHSDays[1][6] = "B";
-        FLHSDays[1][7] = "C";
-        FLHSDays[1][8] = "D";
-        FLHSDays[1][9] = "E";
-        FLHSDays[1][12] = "1";
-        FLHSDays[1][13] = "2";
-        FLHSDays[1][14] = "3";
-        FLHSDays[1][15] = "4";
-        FLHSDays[1][16] = "5";
-        FLHSDays[1][20] = "A";
-        FLHSDays[1][21] = "B";
-        FLHSDays[1][22] = "C";
-        FLHSDays[1][23] = "D";
-        FLHSDays[1][26] = "1";
-        FLHSDays[1][27] = "2";
-        FLHSDays[1][28] = "3";
-        FLHSDays[1][29] = "4";
-        FLHSDays[1][30] = "5";
         if (!(prefs.getInt("Last Time Changed", 0) == (mDate))) {
-            dayTypeEditor.putString(DAY_TYPE, FLHSDays[mMonth][mDate]);
-            dayTypeEditor.commit();
+            JSONArray jsonDays = config.getJSONArray("WhatDay", null);
+            for (int index = 0; index < jsonDays.length(); index++) {
+                String jsonString = null;
+                try {
+                    jsonString = jsonDays.get(index).toString();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    dayTypeEditor.putString(DAY_TYPE, "Unknown");
+                }
+                String date = jsonString.substring(0, jsonString.indexOf(":"));
+                if (date.equals(mMonth + "/" + mDate)) {
+                    dayTypeEditor.putString(DAY_TYPE, jsonString.substring(jsonString.indexOf(":") + 1));
+                    dayTypeEditor.commit();
+                    break;
+                }
+            }
         }
         if (scheduleType.equals("Normal")) {
             String dayType = prefs.getString(DAY_TYPE, "Unknown");
-                DayTitle.setText("Day: " + dayType);
-                if (!dayType.equals("Unknown")) {
-                    if (lunchType.getInt(dayType, -1) != -1) {
-                        loadNormalSchedule(lunchType.getInt(dayType, -1), dayType);
-                    } else {
-                        LunchPickerFragment LunchSelector = new LunchPickerFragment();
-                        LunchSelector.show(getFragmentManager(), "Unknown Lunch");
-                    }
+            DayTitle.setText("Day: " + dayType);
+            if (!dayType.equals("Unknown")) {
+                if (lunchType.getInt(dayType, -1) != -1) {
+                    loadNormalSchedule(lunchType.getInt(dayType, -1), dayType);
+                } else {
+                    LunchPickerFragment LunchSelector = new LunchPickerFragment();
+                    LunchSelector.show(getFragmentManager(), "Unknown Lunch");
                 }
+            }
         }
-        if(scheduleType.equals("Collaborative")) {
+        if (scheduleType.equals("Collaborative")) {
             String[] CourseScheduleToPrint = collabCourses;
             String[] TimeScheduleToPrint = collabTimes;
             ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
@@ -139,12 +131,12 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             Button switchLunch = (Button) findViewById(R.id.switch_lunch);
             switchLunch.setVisibility(View.INVISIBLE);
         }
-        if(scheduleType.equals("Advisory")) {
+        if (scheduleType.equals("Advisory")) {
             String[] CourseScheduleToPrint = {"Unknown Schedule."};
             String[] TimeScheduleToPrint = {"Unknown Times"};
-            int selectedLunch = lunchType.getInt(prefs.getString(DAY_TYPE, "Unknown"), - 1);
+            int selectedLunch = lunchType.getInt(prefs.getString(DAY_TYPE, "Unknown"), -1);
             DayTitle.setText("Day: Advisory");
-            if (selectedLunch != - 1) {
+            if (selectedLunch != -1) {
                 if (selectedLunch == 0) {
                     CourseScheduleToPrint = advLunch1Courses;
                     TimeScheduleToPrint = advLunch1Times;
@@ -157,8 +149,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                     CourseScheduleToPrint = advLunch3Courses;
                     TimeScheduleToPrint = advLunch3Times;
                 }
-            }
-            else {
+            } else {
                 LunchPickerFragment LunchSelector = new LunchPickerFragment();
                 LunchSelector.show(getFragmentManager(), "Unknown Lunch");
             }
@@ -172,7 +163,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
             content.setAdapter(adapter);
         }
-        if(scheduleType.equals("Special Day")) {
+        if (scheduleType.equals("Special Day")) {
             DayTitle.setText("Special Day " + ParserA.parseNumToDay(prefs.getInt(DAY_TYPE, 0)));
             Button switchLunch = (Button) findViewById(R.id.switch_lunch);
             switchLunch.setVisibility(View.INVISIBLE); //Switch this when you figure out lunch compatibility....
@@ -180,22 +171,18 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             String[] TimeScheduleToPrint = new String[jsonTimes.length()];
             JSONArray jsonCourses = config.getJSONArray("SpecialDayCourses", null);
             String[] CourseScheduleToPrint = new String[jsonCourses.length()];
-            for(int index = 0; index < jsonTimes.length(); index++ ) {
+            for (int index = 0; index < jsonTimes.length(); index++) {
                 try {
-                TimeScheduleToPrint[index] = jsonTimes.getString(index);
-                CourseScheduleToPrint[index] = jsonCourses.getString(index);
-                }
-                catch (JSONException ex) {
+                    TimeScheduleToPrint[index] = jsonTimes.getString(index);
+                    CourseScheduleToPrint[index] = jsonCourses.getString(index);
+                } catch (JSONException ex) {
                     break;
                 }
             }
-            dayTypeEditor.putString(DAY_TYPE, FLHSDays[mMonth][mDate]);
-            dayTypeEditor.apply();
             ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
             content.setAdapter(adapter);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
