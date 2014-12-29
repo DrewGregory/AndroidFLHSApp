@@ -2,6 +2,7 @@ AndroidFLHSApp
 ==============
 
 This is the source code for the unpackaged Android App.
+In the app folder...
 The res directory (resources) contains the XML and really all other media for the APK besides the java class files.
 Values, Layouts, and Menus are all stored there and written in XML.
 The res--dpi folders are for storing all the drawables (PNG's, JPG's, GIF's). These are all the pictures!
