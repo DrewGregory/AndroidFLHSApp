@@ -5,9 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.flhs.utils.DayPickerFragment;
+import com.flhs.utils.FLHSDatePicker;
 import com.flhs.utils.LunchPickerFragment;
 import com.flhs.utils.ParserA;
 import com.parse.ParseConfig;
+
+import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,22 +31,8 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.DayPickerListener, LunchPickerFragment.LunchPickerListener {
+public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.DayPickerListener, LunchPickerFragment.LunchPickerListener, DatePickerDialog.OnDateSetListener {
     private static String LUNCH_TYPE = "Lunch Type";
-    /* Here is where I store the dates for the upcoming school days in the calendar........ I'll have to update this frequently....
-                *   Day A == 1
-                *   Day B == 2
-                *   Day C == 3
-                *   Day D == 4
-                *   Day E == 5
-                *   Day 1 == 6
-                *   Day 2 == 7
-                *   Day 3 == 8
-                *   Day 4 == 9
-                *   Day 5 == 10
-                *   So far only 1st quarter.... UPDATE!
-                 */
-
     public static final String DAY_TYPE = "Day Type";
     String[] advLunch1Courses = {"Course 1", "Course 2", "Advisory", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 7", "Course 8"};
     String[] advLunch2Courses = {"Course 1", "Course 2", "Advisory", "Course 3", "Course 4", "Lunch", "Course 5", "Course 6", "Course 7", "Course 8"};
@@ -69,11 +59,13 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     SharedPreferences lunchType, prefs;
     ListView content;
     String scheduleType;
+    Button dateButton;
 
     //Button DateButton;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     /* Lunch Types are 0, 1, and 2, while Day Types are 1, 2, 3, 4, 5, 6, 7, 8, 9, and 10 */
         setContentView(R.layout.activity_schedule);
         SetupNavDrawer();
@@ -81,18 +73,29 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         String[] loadScheduleStrings = {"You don't have school today!"};
         ArrayAdapter<String> EmptySchedule = new ArrayAdapter<String>(ScheduleActivity.this, android.R.layout.simple_list_item_1, loadScheduleStrings);
         content.setAdapter(EmptySchedule);
+        prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
+        Date theCurrentTime = new Date();
+        String mDate = new SimpleDateFormat("dd").format(theCurrentTime);
+        String mMonth = new SimpleDateFormat("MM").format(theCurrentTime);
+        dateButton = (Button) findViewById(R.id.ChangeDate);
+        SharedPreferences.Editor dayTypeEditor = prefs.edit();
+        if (!prefs.getString("Last Time Date Changed","0").equals(mDate)) {
+            dayTypeEditor.putString("selMonth", mMonth);
+            dayTypeEditor.putString("selDate", mDate);
+        }
+        if(!prefs.getString("Last Time Day Changed", "0").equals(mDate)) {
+            dateButton.setText(prefs.getString("selMonth", mMonth) + "/" + prefs.getString("selDate", mDate));
+        }
+
         //DateButton = (Button) findViewById(R.id.dateButton);
         ParseConfig config = ParseConfig.getCurrentConfig();
         scheduleType = config.getString("ScheduleType");
-        Date theCurrentTime = new Date();
-        int mDate = Integer.parseInt(new SimpleDateFormat("dd").format(theCurrentTime));
-        prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
-        int mMonth = Integer.parseInt(new SimpleDateFormat("MM").format(theCurrentTime));
         //DateButton.setText(mMonth + "/" + mDate);
         lunchType = getSharedPreferences(LUNCH_TYPE, MODE_PRIVATE);
         Button DayTitle = (Button) findViewById(R.id.DayTitle);
-        SharedPreferences.Editor dayTypeEditor = prefs.edit();
-        if (!(prefs.getInt("Last Time Changed", 0) == (mDate))) {
+
+
+        if (!(prefs.getString("Last Time Day Changed", "0").equals(mDate))) {
             JSONArray jsonDays = config.getJSONArray("WhatDay", null);
             for (int index = 0; index < jsonDays.length(); index++) {
                 String jsonString = null;
@@ -103,7 +106,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                     dayTypeEditor.putString(DAY_TYPE, "Unknown");
                 }
                 String date = jsonString.substring(0, jsonString.indexOf(":"));
-                if (date.equals(mMonth + "/" + mDate)) {
+                if (date.equals(dateButton.getText())) {
                     dayTypeEditor.putString(DAY_TYPE, jsonString.substring(jsonString.indexOf(":") + 1));
                     dayTypeEditor.commit();
                     break;
@@ -191,6 +194,15 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         return true;
     }
 
+    public void changeDate(View v) {
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putString("Last Time Day Changed", "0");
+        edit.putString("Last Time Date Changed", new SimpleDateFormat("dd").format(new Date()));
+        FLHSDatePicker dialog = new FLHSDatePicker();
+        dialog.show(getFragmentManager(), "Date Picker");
+        edit.apply();
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -202,7 +214,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 Intent aboutActivityExecute = new Intent(getApplicationContext(), AboutActivity.class);
                 startActivity(aboutActivityExecute);
                 return true;
-
             case R.id.home_icon:
                 Intent HomeActivityExecute = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(HomeActivityExecute);
@@ -215,7 +226,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         return super.onOptionsItemSelected(item);
     }
 
-
     public void switch_lunch(View v) {
         LunchPickerFragment LunchSelector = new LunchPickerFragment();
         LunchSelector.show(getFragmentManager(), "Unknown Lunch");
@@ -224,7 +234,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
 
     public void loadNormalSchedule(int Lunch, String SchoolDay) {
         String[] TimeScheduleToPrint = Lunch1Times;
-
         String[] CourseScheduleToPrint = null;
         if ((SchoolDay.equals("A")) || (SchoolDay.equals("1"))) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day1Lunch1Courses, Lunch);
@@ -252,7 +261,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 case 2:
                     TimeScheduleToPrint = Lunch3Times;
                     break;
-
             }
         }
         if (SchoolDay.equals("E") || SchoolDay.equals("5")) {
@@ -294,14 +302,26 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     public void onDayPickPositiveClick(int DayNum) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(DAY_TYPE, ParserA.parseNumToDay(DayNum));
-        editor.putInt("Last Time Changed", Integer.parseInt(new SimpleDateFormat("d").format(new Date())));
-        editor.commit();
+        editor.putString("Last Time Day Changed", new SimpleDateFormat("dd").format(new Date()));
+        editor.apply();
+        dateButton.setText("");
         startActivity(new Intent(ScheduleActivity.this, ScheduleActivity.class));
     }
 
     public void switch_day(View v) {
         DayPickerFragment mFragment = new DayPickerFragment();
         mFragment.show(getFragmentManager(), "Unknown Day");
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        String sMonth = String.format("%02d", ++month);
+        String sDate =  String.format("%02d",day);
+        SharedPreferences.Editor edit = prefs.edit();
+        edit.putString("selMonth", sMonth + "");
+        edit.putString("selDate", sDate + "");
+        edit.apply();
+        startActivity(new Intent(this, ScheduleActivity.class));
     }
 
     private class ScheduleAdapter extends ArrayAdapter<String> {
@@ -331,7 +351,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 rowView.setBackgroundColor(0);//Transparent
             }
             return rowView;
-
         }
     }
 }

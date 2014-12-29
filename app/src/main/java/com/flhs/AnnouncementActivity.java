@@ -77,7 +77,7 @@ public class AnnouncementActivity extends FLHSActivity implements ConnectionErro
 				announcementString = "After connection";
 				Elements annntxt = announce.getElementsByClass("MsoNormal");
 				Element datetxt = annntxt.get(0);
-				dateString = datetxt.text();
+				dateString = datetxt.text().trim();
 				announcementString = "";
 				for (int elementindex = 1; elementindex < (annntxt.size() - 1); elementindex++ ) {
 					Element element = annntxt.get(elementindex);
@@ -95,7 +95,7 @@ public class AnnouncementActivity extends FLHSActivity implements ConnectionErro
 		protected void onPostExecute(Void result) {
 			announcement.setText("postexec");
 			date.setText(dateString);
-			announcement.setText(announcementString);
+			announcement.setText(announcementString.trim());
 			mProgress.setVisibility(ProgressBar.INVISIBLE);
 		}
 

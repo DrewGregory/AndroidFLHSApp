@@ -35,6 +35,16 @@
                 android:text="Switch Lunch"
                 android:onClick="switch_lunch" />
 
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date"
+                android:id="@+id/ChangeDate"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:onClick="changeDate"/>
+
             <!--
             <Button
                 style="?android:attr/buttonStyleSmall"
