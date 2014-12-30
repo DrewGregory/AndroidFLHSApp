@@ -36,4 +36,5 @@ dependencies {
     compile files('libs/Parse-1.6.0.jar')
     compile files('libs/Parse-1.7.1.jar')
     compile files('libs/bolts-android-1.1.3.jar')
+    compile files('libs/selenium-htmlunit-driver-2.44.0.jar')
 }

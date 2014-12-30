@@ -196,8 +196,8 @@ public class FLHSActivity extends Activity {
         }
         switch(item.getItemId()) {
             case R.id.info_icon:
-                Intent aboutactivityexecute = new Intent(getApplicationContext(), AboutActivity.class);
-                startActivity(aboutactivityexecute);
+
+
                 return true;
 
             case R.id.home_icon:

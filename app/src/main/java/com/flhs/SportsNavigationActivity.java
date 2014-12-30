@@ -42,7 +42,6 @@ public class SportsNavigationActivity extends FLHSActivity {
 	int Spring = 2;
 	ArrayAdapter<String> LevelAdapter;
 	ArrayAdapter<String> SeasonAdapter;
-
 	ImageButton backButton;
 	ListView lv;
 	SharedPreferences SportsPrefs;
