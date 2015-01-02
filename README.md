@@ -1,4 +1,4 @@
-AndroidFLHSApp
+AndroidFLHSApp Directory Organization
 ==============
 This is the source code for the unpackaged Android App.
 In the app folder...
@@ -10,8 +10,8 @@ The main package is com.flhs. This package contains another package, com.flhs.ut
 that were were made for the classes in com.flhs.
 The com.flhs classes are the Activities. Each activity is a seperate section of the app. To learn about activities.
 To learn more about how this all works, go to the Android Developer Website and start learning: http://developer.android.com/training/index.html
-================================================
 How to use Parse Config... (remember, this affects ALL USERS!!!)
+================================================
 Sign into parse with the push@student.bcsdny.org account.
 Go to "Core", then "Config"
 The LunchMenuURL Parameter is the URL we want to use for the Lunch Menu (http://bcsdny.org/documents.cfm?id=14.608&subid=630)
