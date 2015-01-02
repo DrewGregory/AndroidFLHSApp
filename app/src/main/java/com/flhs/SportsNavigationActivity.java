@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class SportsNavigationActivity extends FLHSActivity {
-	int SelectedNavDrawerItemIndex = 4;
+
 	String[] Levels = {"Varsity", "Junior Varsity", "Frosh"};
 	String[] Seasons = {"Fall", "Winter", "Spring"};
 	String[] FallVarsitySports = {
@@ -34,12 +34,6 @@ public class SportsNavigationActivity extends FLHSActivity {
 	String[] SpringFroshSports = {
 			"Baseball"	
 	};
-	int Varsity = 0;
-	int JuniorVarsity = 1;
-	int Frosh = 2;
-	int Fall = 0;
-	int Winter = 1;
-	int Spring = 2;
 	ArrayAdapter<String> LevelAdapter;
 	ArrayAdapter<String> SeasonAdapter;
 	ImageButton backButton;

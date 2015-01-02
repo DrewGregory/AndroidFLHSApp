@@ -20,9 +20,9 @@
                 android:id="@+id/DayTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Day ____"
+                android:text="Day"
                 android:textColor="@color/black"
-                android:textSize="30sp"
+                android:textSize="22sp"
                 android:onClick="switch_day" />
 
             <Button
@@ -45,22 +45,11 @@
                 android:layout_centerHorizontal="true"
                 android:onClick="changeDate"/>
 
-            <!--
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Date"
-                android:id="@+id/dateButton"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-                -->
-
         </RelativeLayout>
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="@dimen/vertspacing"
+            android:layout_height="4sp"
             android:background="@color/red" />
 
         <ListView

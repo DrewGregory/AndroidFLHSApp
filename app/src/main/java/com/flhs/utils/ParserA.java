@@ -177,6 +177,14 @@ public class ParserA {
                 return "4";
             case 10:
                 return "5";
+            case 11:
+                return "Adv E";
+            case 12:
+                return "Adv 5";
+            case 13:
+                return "Collab E";
+            case 14:
+                return "Collab 5";
             default:
                 return "Unknown";
         }

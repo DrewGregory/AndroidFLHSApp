@@ -97,14 +97,12 @@ public class AlternatingCoursesDialog extends DialogFragment implements AdapterV
         final ListView secondCourseLV = (ListView) v.findViewById(R.id.AlternatingCourse2DaySpinner);
         final EditText firstCourseNameEditText = (EditText) v.findViewById(R.id.firstAlternatingCourseName);
         final EditText secondCourseNameEditText = (EditText) v.findViewById(R.id.secondAlternatingCourseName);
-        SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", myActivity.MODE_PRIVATE);
+        SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
         builder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", myActivity.MODE_PRIVATE);
+                SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor edit = CoursePreferences.edit();
-                //if (!gymSwitch.isChecked()) {
-
                     SparseBooleanArray firstCourseLVCheckedItemPositions = firstCourseLV.getCheckedItemPositions();
                     SparseBooleanArray secondCourseLVCheckedItemPositions = secondCourseLV.getCheckedItemPositions();
                     String firstCourseName = firstCourseNameEditText.getText().toString();
@@ -113,6 +111,14 @@ public class AlternatingCoursesDialog extends DialogFragment implements AdapterV
                     for(int firstCourseItemPosition = 0; firstCourseItemPosition < 10; firstCourseItemPosition++) {
                         if(firstCourseLVCheckedItemPositions.get(firstCourseItemPosition)) {
                             edit.putString("Course " + courseNum + "Day" + ParserA.parseNumToDay(firstCourseItemPosition + 1), firstCourseName);
+                            if (firstCourseItemPosition == 4) {
+                                edit.putString("Course " + courseNum + "DayAdv E", firstCourseName);
+                                edit.putString("Course " + courseNum + "DayCollab E", firstCourseName);
+                            }
+                            if (firstCourseItemPosition == 9) {
+                                edit.putString("Course " + courseNum + "DayAdv 5", firstCourseName);
+                                edit.putString("Course " + courseNum + "DayCollab 5", firstCourseName);
+                            }
                         }
 
                     }
@@ -120,12 +126,21 @@ public class AlternatingCoursesDialog extends DialogFragment implements AdapterV
                 for(int secondCourseItemPosition = 0; secondCourseItemPosition < 10; secondCourseItemPosition++) {
                     if(secondCourseLVCheckedItemPositions.get(secondCourseItemPosition)) {
                         edit.putString("Course " + courseNum + "Day" + ParserA.parseNumToDay(secondCourseItemPosition + 1), secondCourseName);
+                        if (secondCourseItemPosition == 4) {
+                            edit.putString("Course " + courseNum + "DayAdv E", secondCourseName);
+                            edit.putString("Course " + courseNum + "DayCollab E", secondCourseName);
+                        }
+                        if (secondCourseItemPosition == 9) {
+                            edit.putString("Course " + courseNum + "DayAdv 5", secondCourseName);
+                            edit.putString("Course " + courseNum + "DayCollab 5", secondCourseName);
+                        }
+
                     }
 
 
                 }
                 //}
-                edit.commit();
+                edit.apply();
             }
 
         });

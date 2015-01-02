@@ -20,11 +20,9 @@ import com.flhs.utils.AlternatingCoursesDialog;
 
 
 public class CourseSelectorActivity extends Activity implements AlternatingCoursesDialog.getEditText, AlternatingCoursesDialog.getToggleButton {
-    final String[] Days = {"A","B","C","D","E","1","2","3","4","5"};
-    ToggleButton Course1AltToggle, Course2AltToggle, Course3AltToggle, Course4AltToggle, Course5AltToggle, Course6AltToggle, Course7AltToggle, Course8AltToggle;
+    final String[] Days = {"A","B","C","D","E","1","2","3","4","5", "Adv E", "Adv 5", "Collab 5", "Collab E"};
     EditText[] CourseEditTexts = new EditText[8];
     ToggleButton[] CourseAltToggles = new ToggleButton[8];
-    EditText Course1, Course2, Course3, Course4, Course5, Course6, Course7, Course8;
     SharedPreferences CoursePreferences;
     ToggleButton selectedToggleButton;
     private EditText selectedEditText;
@@ -39,7 +37,6 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
                 Intent aboutActivityExecute = new Intent(getApplicationContext(), AboutActivity.class);
                 startActivity(aboutActivityExecute);
                 return true;
-
             case R.id.home_icon:
                 Intent HomeActivityExecute = new Intent(getApplicationContext(), HomeActivity.class);
                 startActivity(HomeActivityExecute);
@@ -128,10 +125,10 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         CourseAltToggles[6] = (ToggleButton) findViewById(R.id.Course7AltToggle);
         CourseAltToggles[7] = (ToggleButton) findViewById(R.id.Course8AltToggle);
         for (int courseIndex = 0; courseIndex < CourseAltToggles.length; courseIndex++ ) {
-            if(CoursePreferences.getBoolean("Course"+ (courseIndex + 1) + "Alt", false)) {
+            if(CoursePreferences.getBoolean("Course"+ (courseIndex + 1) + "Alt", true)) {
                 CourseAltToggles[courseIndex].setChecked(true);
                 CourseAltToggles[courseIndex].setText("Alternating Course " + (courseIndex + 1) );
-                CourseEditTexts[courseIndex].setVisibility(View.VISIBLE);
+                CourseEditTexts[courseIndex].setVisibility(View.GONE);
             }
         }
 
@@ -170,7 +167,7 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
                 if(!CourseAltToggles[courseIndex].isChecked()) {
                     String courseName = CourseEditTexts[courseIndex].getText().toString();
                     mEditor.putBoolean("Course" + (courseIndex + 1) + "Alt", false);
-                    for (int day = 0; day < 10; day++) {
+                    for (int day = 0; day < Days.length; day++) {
                         mEditor.putString("Course " + (courseIndex + 1) + "Day" + Days[day], courseName);
                     }
 
@@ -186,7 +183,6 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         protected void onPostExecute(Void aVoid) {
             mProgressBar.setVisibility(View.INVISIBLE);
             startActivity(new Intent(CourseSelectorActivity.this, ScheduleActivity.class));
-
         }
     }
 
@@ -200,6 +196,5 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         getMenuInflater().inflate(R.menu.taskbar, menu);
         return true;
     }
-
 
 }

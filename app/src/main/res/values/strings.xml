@@ -36,6 +36,10 @@
         <item>Day 3</item>
         <item>Day 4</item>
         <item>Day 5</item>
+        <item>Advisory E</item>
+        <item>Advisory 5</item>
+        <item>Collaborative E</item>
+        <item>Collaborative 5</item>
     </string-array>
 
     <string name="title_activity_temp_sports">Sports</string>
