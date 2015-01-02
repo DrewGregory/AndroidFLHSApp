@@ -125,7 +125,7 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         CourseAltToggles[6] = (ToggleButton) findViewById(R.id.Course7AltToggle);
         CourseAltToggles[7] = (ToggleButton) findViewById(R.id.Course8AltToggle);
         for (int courseIndex = 0; courseIndex < CourseAltToggles.length; courseIndex++ ) {
-            if(CoursePreferences.getBoolean("Course"+ (courseIndex + 1) + "Alt", true)) {
+            if(CoursePreferences.getBoolean("Course"+ (courseIndex + 1) + "Alt", false)) {
                 CourseAltToggles[courseIndex].setChecked(true);
                 CourseAltToggles[courseIndex].setText("Alternating Course " + (courseIndex + 1) );
                 CourseEditTexts[courseIndex].setVisibility(View.GONE);

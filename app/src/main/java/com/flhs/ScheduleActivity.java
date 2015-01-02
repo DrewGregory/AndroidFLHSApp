@@ -8,6 +8,7 @@ import com.flhs.utils.DayPickerFragment;
 import com.flhs.utils.FLHSDatePicker;
 import com.flhs.utils.LunchPickerFragment;
 import com.flhs.utils.ParserA;
+import com.flhs.utils.ScheduleListViewHolderItem;
 import com.parse.ParseConfig;
 
 import android.app.DatePickerDialog;
@@ -93,25 +94,27 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             dateButton.setText(prefs.getString("selMonth", mMonth) + "/" + prefs.getString("selDate", mDate));
             boolean foundDate = false;
             JSONArray jsonDays = config.getJSONArray("WhatDay", null);
-            for (int index = 0; index < jsonDays.length(); index++) {
-                String jsonString = null;
-                try {
-                    jsonString = jsonDays.get(index).toString();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            if (jsonDays != null) {
+                for (int index = 0; index < jsonDays.length(); index++) {
+                    String jsonString = null;
+                    try {
+                        jsonString = jsonDays.get(index).toString();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        dayTypeEditor.putString(DAY_TYPE, "Unknown");
+                    }
+                    String date = jsonString.substring(0, jsonString.indexOf(":"));
+                    if (date.equals(dateButton.getText())) {
+                        dayTypeEditor.putString(DAY_TYPE, jsonString.substring(jsonString.indexOf(":") + 1));
+                        dayTypeEditor.commit();
+                        foundDate = true;
+                        break;
+                    }
+                }
+                if (!foundDate) {
                     dayTypeEditor.putString(DAY_TYPE, "Unknown");
-                }
-                String date = jsonString.substring(0, jsonString.indexOf(":"));
-                if (date.equals(dateButton.getText())) {
-                    dayTypeEditor.putString(DAY_TYPE, jsonString.substring(jsonString.indexOf(":") + 1));
                     dayTypeEditor.commit();
-                    foundDate = true;
-                    break;
                 }
-            }
-            if (!foundDate) {
-                dayTypeEditor.putString(DAY_TYPE, "Unknown");
-                dayTypeEditor.commit();
             }
         }
         if (scheduleType.equals("Normal")) {
@@ -131,8 +134,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             }
             if (dayType.equals("Adv E") || dayType.equals("Adv 5")) {
                 /*Switch day to E and 5 temporarily so that I can get the correct lunch setting in "lunchType.getInt(dayType, -1)"*/
-
-
                 String[] CourseScheduleToPrint = {"Unknown Schedule."};
                 String[] TimeScheduleToPrint = {"Unknown Times"};
                 int selectedLunch = lunchType.getInt(dayType, -1);
@@ -337,6 +338,8 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         private String[] courses;
         private String[] times;
         Calendar myCalendar;
+        SharedPreferences CoursePreferences;
+        ScheduleListViewHolderItem mItem;
 
         public ScheduleAdapter(Context context,
                                String[] Courses, String[] Times) {
@@ -345,6 +348,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             this.courses = Courses;
             this.times = Times;
             myCalendar = Calendar.getInstance();
+            CoursePreferences = getSharedPreferences("CourseNames", MODE_PRIVATE);
         }
 
 
@@ -373,16 +377,23 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            SharedPreferences CoursePreferences = getSharedPreferences("CourseNames", MODE_PRIVATE);
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.schedule_lv_item, parent, false);
-            TextView CourseSpot = (TextView) rowView.findViewById(R.id.courseName);
-            CourseSpot.setText(CoursePreferences.getString(courses[position] + "Day" + prefs.getString(DAY_TYPE, "Unknown"), courses[position]));
-            TextView TimeSpot = (TextView) rowView.findViewById(R.id.times);
-            TimeSpot.setText(times[position]);
+
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.schedule_lv_item, parent, false);
+                mItem = new ScheduleListViewHolderItem();
+                mItem.courseName = (TextView) convertView.findViewById(R.id.courseName);
+                mItem.courseTime = (TextView) convertView.findViewById(R.id.times);
+                convertView.setTag(mItem);
+            } else {
+                mItem = (ScheduleListViewHolderItem) convertView.getTag();
+
+            }
+            mItem.courseName.setText(CoursePreferences.getString(courses[position] + "Day" + prefs.getString(DAY_TYPE, "Unknown"), courses[position]));
+            mItem.courseTime.setText(times[position]);
             if(isDuringTime(times[position]))
-                rowView.setBackgroundColor(Color.YELLOW);
-            return rowView;
+                convertView.setBackgroundColor(Color.YELLOW);
+            return convertView;
         }
     }
 }
