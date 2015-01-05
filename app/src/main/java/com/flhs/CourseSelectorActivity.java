@@ -17,6 +17,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.flhs.utils.AlternatingCoursesDialog;
+import com.parse.ConfigCallback;
+import com.parse.ParseConfig;
+import com.parse.ParseException;
 
 
 public class CourseSelectorActivity extends Activity implements AlternatingCoursesDialog.getEditText, AlternatingCoursesDialog.getToggleButton {
@@ -132,6 +135,18 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
             }
         }
 
+        ParseConfig.getInBackground(new ConfigCallback() {
+            @Override
+            public void done(ParseConfig config, ParseException e) {
+                if (e == null) {
+                } else {
+                    config = ParseConfig.getCurrentConfig();
+                }
+
+                // Get the message from config or fallback to default value
+
+            }
+        });
 
     }
 

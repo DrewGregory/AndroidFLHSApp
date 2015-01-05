@@ -41,6 +41,18 @@
         <item>Collaborative E</item>
         <item>Collaborative 5</item>
     </string-array>
+    <string-array name="Norm_Days">
+    <item>Day A</item>
+    <item>Day B</item>
+    <item>Day C</item>
+    <item>Day D</item>
+    <item>Day E</item>
+    <item>Day 1</item>
+    <item>Day 2</item>
+    <item>Day 3</item>
+    <item>Day 4</item>
+    <item>Day 5</item>
+    </string-array>
 
     <string name="title_activity_temp_sports">Sports</string>
 

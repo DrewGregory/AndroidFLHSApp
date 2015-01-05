@@ -15,6 +15,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class ParserA {
+    final static int MIDDLE_LUNCH = 1;
+    final static int LATE_LUNCH = 2;
 	public static String integerMonthToString(int month) {
 		String monthString;
 		switch (month) {
@@ -119,18 +121,18 @@ public class ParserA {
 		return SportsNewsEvents;
 	}
 
-	public static String[] setLunchOrder (String[] Lunch1Schedule, int LunchNum) {
+	public static String[] setLunchOrder (String[] Lunch1Schedule, int lunchType) {
 		String[] ParsedSchedule = Lunch1Schedule;
 		if (Lunch1Schedule.length == 7) {
 			String Lunch = Lunch1Schedule[2];
 			String FirstClass = Lunch1Schedule[3];
 			String SecondClass = Lunch1Schedule[4];
-			if (LunchNum == 1) {
+			if (lunchType == MIDDLE_LUNCH) {
 				ParsedSchedule[2] = FirstClass;
 				ParsedSchedule[3] = Lunch;
 				ParsedSchedule[4] = SecondClass;
 			}
-			if (LunchNum == 2) {
+			if (lunchType == LATE_LUNCH) {
 				ParsedSchedule[2] = FirstClass;
 				ParsedSchedule[3] = SecondClass;
 				ParsedSchedule[4] = Lunch;
@@ -141,12 +143,12 @@ public class ParserA {
 			String Lunch = Lunch1Schedule[3];
 			String FirstClass = Lunch1Schedule[4];
 			String SecondClass = Lunch1Schedule[5];
-			if (LunchNum == 1) {
+			if (lunchType == MIDDLE_LUNCH) {
 				ParsedSchedule[3] = FirstClass;
 				ParsedSchedule[4] = Lunch;
 				ParsedSchedule[5] = SecondClass;
 			}
-			if (LunchNum == 2) {
+			if (lunchType == LATE_LUNCH) {
 				ParsedSchedule[3] = FirstClass;
 				ParsedSchedule[4] = SecondClass;
 				ParsedSchedule[5] = Lunch;
