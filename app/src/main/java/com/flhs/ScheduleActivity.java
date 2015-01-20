@@ -254,7 +254,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                     LunchPickerFragment LunchSelector = new LunchPickerFragment();
                     LunchSelector.show(getFragmentManager(), "Unknown Lunch");
                 }
-                if (!(day.equals("E") || day.equals("5"))) {
+                if ((day.equals("E") || day.equals("5"))) {
                     switch (lunch) {
                         case EARLY_LUNCH:
                             TimeScheduleToPrint = twoHourDelay5EarlyLunchTimes;

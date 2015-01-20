@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,7 +115,6 @@ public class AlternatingCoursesDialog extends DialogFragment {
 
 
                 }
-                Log.i("Values", firstCourseValues + " :: " + secondCourseValues);
                 edit.putString("Course" + courseNum + "Alt1DayValues", firstCourseValues);
                 edit.putString("Course" + courseNum + "Alt2DayValues", secondCourseValues);
                 edit.apply();
@@ -135,7 +133,6 @@ public class AlternatingCoursesDialog extends DialogFragment {
         });
         //Old Adapter .....ArrayAdapter<CharSequence> DaysAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Norm_Days, android.R.layout.simple_list_item_multiple_choice);
         SharedPreferences prefs = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
-        Log.i("BeforeSplit", prefs.getString("Course" + courseNum + "Alt1DayValues","") + " :: " + prefs.getString("Course" + courseNum + "Alt2DayValues",""));
         String[] firstDayValues = prefs.getString("Course" + courseNum + "Alt1DayValues","").split("");
         String[] secondDayValues = prefs.getString("Course" + courseNum + "Alt2DayValues","").split("");
         DaysAdapter mFirstDaysAdapter = new DaysAdapter(getActivity(), firstDayValues, Days);
@@ -170,7 +167,6 @@ public class AlternatingCoursesDialog extends DialogFragment {
             super(context, R.layout.alternating_courses_lv_item, normDays);
             this.context = context;
             this.values = alreadyStoredDayValues;
-            Log.i("alreadyStoredDayValues length: ", "" + alreadyStoredDayValues.length);
         }
 
         @Override
