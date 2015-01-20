@@ -2,38 +2,26 @@ package com.flhs.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
-
 import com.flhs.R;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.List;
 
 /**
@@ -45,7 +33,6 @@ public class AlternatingCoursesDialog extends DialogFragment {
     View v;
     final String[] Days = {"A","B","C","D","E","1","2","3","4","5"};
     ToggleButton altToggle;
-    int[] Alt1Days, Alt2Days;
     int[] PEDays;
     EditText LabName, editText;
 
@@ -82,23 +69,25 @@ public class AlternatingCoursesDialog extends DialogFragment {
         final EditText firstCourseNameEditText = (EditText) v.findViewById(R.id.firstAlternatingCourseName);
         final EditText secondCourseNameEditText = (EditText) v.findViewById(R.id.secondAlternatingCourseName);
         SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
+
         builder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
                 SharedPreferences.Editor edit = CoursePreferences.edit();
-                SparseBooleanArray firstCourseLVCheckedItemPositions = firstCourseLV.getCheckedItemPositions();
-                SparseBooleanArray secondCourseLVCheckedItemPositions = secondCourseLV.getCheckedItemPositions();
+                DaysAdapter firstAdapter = (DaysAdapter) firstCourseLV.getAdapter();
+                DaysAdapter secondAdapter = (DaysAdapter) secondCourseLV.getAdapter();
                 String firstCourseName = firstCourseNameEditText.getText().toString();
                 String secondCourseName = secondCourseNameEditText.getText().toString();
-                Log.i("Checked item positions: ", firstCourseLVCheckedItemPositions.size() + " " + secondCourseLVCheckedItemPositions.size());
                 edit.putString("Course" + courseNum + "Alt 1",firstCourseName);
                 edit.putString("Course" + courseNum + "Alt 2",secondCourseName);
+                String firstCourseValues = "";
+                String secondCourseValues = "";
                     for(int firstCourseItemPosition = 0; firstCourseItemPosition < 10; firstCourseItemPosition++) {
-                        Log.i("FLHS_Info", firstCourseItemPosition + "");
-                        if(firstCourseLVCheckedItemPositions.get(firstCourseItemPosition)) {
-                            Log.i("FLHS_Info", firstCourseItemPosition + "");
-                            edit.putString("Course " + courseNum + "Day" + ParserA.parseNumToDay(firstCourseItemPosition + 1), firstCourseName);
+                        if(firstAdapter.mItems[firstCourseItemPosition].isChecked) {
+                            String day = ParserA.parseNumToDay(firstCourseItemPosition + 1);
+                            edit.putString("Course " + courseNum + "Day" + day, firstCourseName);
+                            firstCourseValues += " " + day;
                             if (firstCourseItemPosition == 4) {
                                 edit.putString("Course " + courseNum + "DayAdv E", firstCourseName);
                                 edit.putString("Course " + courseNum + "DayCollab E", firstCourseName);
@@ -110,9 +99,10 @@ public class AlternatingCoursesDialog extends DialogFragment {
                         }
                     }
                 for(int secondCourseItemPosition = 0; secondCourseItemPosition < 10; secondCourseItemPosition++) {
-                    if(secondCourseLVCheckedItemPositions.get(secondCourseItemPosition)) {
-                        Log.i("FLHS_Info", "sec" + secondCourseItemPosition + "");
-                        edit.putString("Course " + courseNum + "Day" + ParserA.parseNumToDay(secondCourseItemPosition + 1), secondCourseName);
+                    if(secondAdapter.mItems[secondCourseItemPosition].isChecked) {
+                        String day = ParserA.parseNumToDay(secondCourseItemPosition + 1);
+                        edit.putString("Course " + courseNum + "Day" + day, secondCourseName);
+                        secondCourseValues += " " + day;
                         if (secondCourseItemPosition == 4) {
                             edit.putString("Course " + courseNum + "DayAdv E", secondCourseName);
                             edit.putString("Course " + courseNum + "DayCollab E", secondCourseName);
@@ -126,7 +116,9 @@ public class AlternatingCoursesDialog extends DialogFragment {
 
 
                 }
-                //}
+                Log.i("Values", firstCourseValues + " :: " + secondCourseValues);
+                edit.putString("Course" + courseNum + "Alt1DayValues", firstCourseValues);
+                edit.putString("Course" + courseNum + "Alt2DayValues", secondCourseValues);
                 edit.apply();
             }
 
@@ -141,17 +133,16 @@ public class AlternatingCoursesDialog extends DialogFragment {
 
             }
         });
-
-
-
-        //String[] DayEor5 = {"Day E", "Day 5"};
-        //ArrayAdapter<String> LastDayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, DayEor5);
-        ArrayAdapter<CharSequence> DaysAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Norm_Days, android.R.layout.simple_list_item_multiple_choice);
-        //PESpinner.setAdapter(LastDayAdapter);
-        firstCourseLV.setAdapter(DaysAdapter);
-        secondCourseLV.setAdapter(DaysAdapter);
-        //PESpinner.setOnItemSelectedListener(this);
-        secondCourseLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        //Old Adapter .....ArrayAdapter<CharSequence> DaysAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Norm_Days, android.R.layout.simple_list_item_multiple_choice);
+        SharedPreferences prefs = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
+        Log.i("BeforeSplit", prefs.getString("Course" + courseNum + "Alt1DayValues","") + " :: " + prefs.getString("Course" + courseNum + "Alt2DayValues",""));
+        String[] firstDayValues = prefs.getString("Course" + courseNum + "Alt1DayValues","").split("");
+        String[] secondDayValues = prefs.getString("Course" + courseNum + "Alt2DayValues","").split("");
+        DaysAdapter mFirstDaysAdapter = new DaysAdapter(getActivity(), firstDayValues, Days);
+        DaysAdapter mSecondDaysAdapter = new DaysAdapter(getActivity(), secondDayValues, Days);
+        firstCourseLV.setAdapter(mFirstDaysAdapter);
+        secondCourseLV.setAdapter(mSecondDaysAdapter);
+        secondCourseLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE); //Not sure if this does anything.....
         firstCourseLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         String firstCourseName = CoursePreferences.getString("Course" + courseNum + "Alt 1", "First Course Name");
         String secondCourseName = CoursePreferences.getString("Course" + courseNum + "Alt 2", "Second Course Name");
@@ -159,15 +150,51 @@ public class AlternatingCoursesDialog extends DialogFragment {
         secondCourseNameEditText.setText(secondCourseName);
         return builder.create();
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         myActivity = activity;
         getToggleButton active = (getToggleButton) activity;
         getEditText selEditText = (getEditText) activity;
         altToggle = active.getToggleButton();
         editText = selEditText.getEditText();
+    }
+
+    private class DaysAdapter extends ArrayAdapter<String> {
+        String[] normDays = {"A", "B", "C", "D", "E", "1", "2", "3", "4", "5"};
+        String[] values;
+        ListViewHolderItem[] mItems = new ListViewHolderItem[10];
+        Context context;
+        public DaysAdapter (Context context, String[] alreadyStoredDayValues, String[] normDays) {
+            super(context, R.layout.alternating_courses_lv_item, normDays);
+            this.context = context;
+            this.values = alreadyStoredDayValues;
+            Log.i("alreadyStoredDayValues length: ", "" + alreadyStoredDayValues.length);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.alternating_courses_lv_item, parent, false);
+                mItems[position] = new ListViewHolderItem();
+                mItems[position].checkBox = (CheckBox) convertView.findViewById(R.id.alt_checkbox);
+                mItems[position].checkBox.setChecked(false);
+                for(String day : values)
+                    if (day.equals(normDays[position])) {
+                        mItems[position].checkBox.setChecked(true);
+                        mItems[position].isChecked = true;
+                    }
+                convertView.setTag(mItems[position]);
+            } else {
+                mItems[position] = (ListViewHolderItem) convertView.getTag();
+                mItems[position].checkBox.setChecked(mItems[position].isChecked);
+            }
+            mItems[position].checkBox.setText("Day " + normDays[position]);
+            return convertView;
+        }
+
 
     }
 

@@ -10,6 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Switch;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.flhs.utils.AlternatingCoursesDialog;
+import com.flhs.utils.ListViewHolderItem;
 import com.parse.ConfigCallback;
 import com.parse.ParseConfig;
 import com.parse.ParseException;
@@ -210,6 +212,17 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.taskbar, menu);
         return true;
+    }
+
+    public void day_select (View v) {
+        View parent = (View) v.getParent();
+        CheckBox checkbox = (CheckBox) v;
+        try {
+            ListViewHolderItem item = (ListViewHolderItem) parent.getTag();
+            item.isChecked = checkbox.isChecked();
+        } catch (ClassCastException e) {
+            //Something happened.... won't store this checkbox
+        }
     }
 
 }
