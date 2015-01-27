@@ -6,12 +6,15 @@ import com.flhs.utils.ParserA;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+
 
 @SuppressLint("ParserError")
 public class CalendarActivity extends FLHSActivity{
@@ -21,6 +24,15 @@ public class CalendarActivity extends FLHSActivity{
 	Formatter formattingthingy;
 	WebView calendarPrintWebpageViewer;
 	int selectedYear;
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getActionBar().setIcon(R.drawable.calendar_icon_red);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

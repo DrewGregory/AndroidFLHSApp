@@ -9,6 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -27,7 +28,14 @@ public class AnnouncementActivity extends FLHSActivity implements ConnectionErro
 	ProgressDialog prdi;
 	ProgressBar mProgress;
 
-	@Override
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getActionBar().setIcon(R.drawable.announcements_icon_red);
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_announcement);
@@ -91,6 +99,7 @@ public class AnnouncementActivity extends FLHSActivity implements ConnectionErro
 
 			return null;
 		}
+
 		@Override
 		protected void onPostExecute(Void result) {
 			announcement.setText("postexec");
@@ -98,8 +107,6 @@ public class AnnouncementActivity extends FLHSActivity implements ConnectionErro
 			announcement.setText(announcementString.trim());
 			mProgress.setVisibility(ProgressBar.INVISIBLE);
 		}
-
-
 	}
 
 	@Override
@@ -113,4 +120,5 @@ public class AnnouncementActivity extends FLHSActivity implements ConnectionErro
 		mProgress.setVisibility(ProgressBar.INVISIBLE);
 		
 	}
+
 }

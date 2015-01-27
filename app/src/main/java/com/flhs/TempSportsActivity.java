@@ -10,7 +10,12 @@ import android.webkit.WebViewClient;
 
 
 public class TempSportsActivity extends FLHSActivity {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getActionBar().setIcon(R.drawable.sports_icon_red);
+        return super.onCreateOptionsMenu(menu);
 
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

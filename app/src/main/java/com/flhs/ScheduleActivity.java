@@ -317,6 +317,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.schedule_content_menu, menu);
+        getActionBar().setIcon(R.drawable.schedule_red);
         getActionBar().show();
         return true;
     }

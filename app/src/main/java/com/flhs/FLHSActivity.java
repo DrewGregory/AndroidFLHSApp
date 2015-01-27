@@ -104,42 +104,42 @@ public class FLHSActivity extends Activity {
             {
                 case 0:
                     if (getTitle().equals("Announcements")) {
-                        imageView.setImageResource(R.drawable.announcements_red);
+                        imageView.setImageResource(R.drawable.announcements_icon_red);
                         textView.setTextColor(Color.RED);
                     } else {
-                        imageView.setImageResource(R.drawable.announcements_black);
+                        imageView.setImageResource(R.drawable.announcements_icon_black);
                     }
                     break;
                 case 1:
                     if(getTitle().equals("Calendar")) {
                         textView.setTextColor(Color.RED);
-                        imageView.setImageResource(R.drawable.calendar_red);
+                        imageView.setImageResource(R.drawable.calendar_icon_red);
                     } else {
-                        imageView.setImageResource(R.drawable.calendar_black);
+                        imageView.setImageResource(R.drawable.calendar_icon_black);
                     }
                     break;
                 case 2:
                     if(getTitle().equals("Lunch Menu")) {
-                        imageView.setImageResource(R.drawable.lunchmenu_red);
+                        imageView.setImageResource(R.drawable.lunch_menu_red);
                         textView.setTextColor(Color.RED);
                     } else {
-                        imageView.setImageResource(R.drawable.lunchmenu_black);
+                        imageView.setImageResource(R.drawable.lunch_menu_black);
                     }
                     break;
                 case 3:
                     if(getTitle().equals("Sports")) {
-                        imageView.setImageResource(R.drawable.sports_red);
+                        imageView.setImageResource(R.drawable.sports_icon_red);
                         textView.setTextColor(Color.RED);
                     } else {
-                        imageView.setImageResource(R.drawable.sports_black);
+                        imageView.setImageResource(R.drawable.sports_icon_black);
                     }
                     break;
                 case 4:
                     if(getTitle().equals("Bell Schedules")) {
-                        imageView.setImageResource(R.drawable.clock_red);
+                        imageView.setImageResource(R.drawable.schedule_red);
                         textView.setTextColor(Color.RED);
                     } else {
-                        imageView.setImageResource(R.drawable.clock_black);
+                        imageView.setImageResource(R.drawable.schedule_black);
                     }
                     break;
                 default:

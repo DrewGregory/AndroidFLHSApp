@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -37,7 +38,11 @@ public class HomeActivity extends FLHSActivity implements ConnectionErrorFragmen
 	public static TextView txtdate;
 	public static ListView sporteventstodaylv;
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getActionBar().setIcon(R.drawable.ic_launcher);
+        return super.onCreateOptionsMenu(menu);
+    }
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

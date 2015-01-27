@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="100dp"
         android:src="@drawable/ic_launcher" />
 
     <TextView
@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:textColor="@color/black"
+        android:layout_gravity="center"
         android:textSize="10pt"
         android:text="TextView" />
 
