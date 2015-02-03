@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="22sp"
-        android:text="Event!"
+        android:text="Event!\n\n\n"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_gravity="center_vertical" />
  </LinearLayout>

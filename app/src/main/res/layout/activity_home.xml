@@ -5,14 +5,15 @@
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray"
         android:orientation="vertical" >
 
         <LinearLayout
+            android:layout_margin="@dimen/vertspacing"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
 
             <RelativeLayout
@@ -46,12 +47,12 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="404dp"
+                        android:layout_height="wrap_content"
                         android:background="@color/homeboxbg"
                         android:id="@+id/homebox1"
                         android:orientation="vertical" >
@@ -67,7 +68,7 @@
                         <ListView
                             android:id="@+id/eventsTodayListView"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             />
                     </LinearLayout>
 
@@ -77,7 +78,7 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="604dp"
+                        android:layout_height="wrap_content"
                         android:background="@color/blue"
                         android:id="@+id/homebox2"
                         android:orientation="vertical" >
@@ -101,7 +102,9 @@
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
-
+        <View
+            android:layout_width="0pt"
+            android:layout_height="6sp" />
 
     </LinearLayout>
 

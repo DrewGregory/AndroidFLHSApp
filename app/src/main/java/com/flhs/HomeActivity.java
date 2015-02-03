@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.flhs.utils.ConnectionErrorFragment;
+import com.flhs.utils.ListViewHolderItem;
 import com.flhs.utils.ParserA;
 import com.flhs.utils.SportEvent;
 import com.flhs.utils.eventobject;
@@ -25,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -195,17 +197,34 @@ public class HomeActivity extends FLHSActivity implements ConnectionErrorFragmen
             eventstodaylv.setClickable(false);
             sporteventstodaylv.setClickable(false);
 			mProgress.setVisibility(ProgressBar.INVISIBLE);
-
-
-
-
-
+            justifyListViewHeightBasedOnChildren(eventstodaylv);
+            justifyListViewHeightBasedOnChildren(sporteventstodaylv);
 
 
 		}
 
 
 	}
+    public void justifyListViewHeightBasedOnChildren (ListView listView) {
+
+        ListAdapter adapter = listView.getAdapter();
+
+        if (adapter == null) {
+            return;
+        }
+        ViewGroup vg = listView;
+        int totalHeight = 0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View listItem = adapter.getView(i, null, vg);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams par = listView.getLayoutParams();
+        par.height = totalHeight + (listView.getDividerHeight() * (adapter.getCount() - 1));
+        listView.setLayoutParams(par);
+        listView.requestLayout();
+    }
 
     private class EventsAdapter extends ArrayAdapter<String> {
         String[] events;
@@ -220,12 +239,20 @@ public class HomeActivity extends FLHSActivity implements ConnectionErrorFragmen
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.events_today_list_view_item, parent, false);
-            TextView textView = (TextView) rowView.findViewById(R.id.eventsListTextView);
-            textView.setText(events[position]);
+            ListViewHolderItem item;
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.events_today_list_view_item, parent, false);
+                item = new ListViewHolderItem();
+                item.courseName = (TextView) convertView.findViewById(R.id.eventsListTextView); //Too lazy to make different ListViewHolderItem.... courseName will be the TextView we will use :-)
+                convertView.setTag(item);
+            } else {
+                item  = (ListViewHolderItem) convertView.getTag();
+            }
+
+            item.courseName.setText(events[position]);
             //listViewHeight += textView.getMeasuredHeight() + textView.getHeight() + textView.getMinimumHeight();                                      // textView.getTextSize() * textView.getLineCount() + 172; //android:layout_margin=88
-            return rowView;
+            return convertView;
         }
     }
 

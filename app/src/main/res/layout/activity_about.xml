@@ -63,15 +63,6 @@
                 android:id="@+id/Logo"
                 android:src="@drawable/fox_lane_logo" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="Drew Gregory"
-                android:id="@+id/textView"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
         </RelativeLayout>
     </LinearLayout>
 
