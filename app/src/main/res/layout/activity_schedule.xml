@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:text="Day"
                 android:textColor="@color/black"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:onClick="switch_day" />
 
             <Button

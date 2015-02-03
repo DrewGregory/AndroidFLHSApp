@@ -70,7 +70,9 @@
                     android:text="Loading Announcements..."
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/black"
-                    android:textSize="8pt" />
+                    android:textSize="8pt"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp" />
             </ScrollView>
         </LinearLayout>
     </LinearLayout>

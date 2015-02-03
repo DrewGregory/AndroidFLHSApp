@@ -60,9 +60,9 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     String[] day3Lunch1Courses = {"Course 2", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 7"};
     String[] day4Lunch1Courses = {"Course 1", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 8"};
     String[] day5Lunch1Courses = {"Course 1", "Course 2", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 7", "Course 8"};
-    String[] day5Lunch1Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:40", "10:45 - 11:15", "11:20 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
-    String[] day5Lunch2Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:40", "10:45 - 11:25", "11:30 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
-    String[] day5Lunch3Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:40", "10:45 - 11:25", "11:30 - 12:10", "12:15 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
+    String[] day5Lunch1Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:30", "10:35 - 11:15", "11:20 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
+    String[] day5Lunch2Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:40", "10:45 - 11:15", "11:20 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
+    String[] day5Lunch3Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:40", "10:45 - 11:25", "11:30 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
     final int EARLY_LUNCH = 0;
     final int MIDDLE_LUNCH = 1;
     final int LATE_LUNCH = 2;
@@ -250,7 +250,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 String[] TimeScheduleToPrint = {"Unknown Times"};
                 String day = prefs.getString(DAY_TYPE, "Unknown");
                 int lunch = lunchType.getInt(day, -1);
-                if (lunch != EARLY_LUNCH || lunch != MIDDLE_LUNCH || lunch != LATE_LUNCH) {
+                if (lunch != EARLY_LUNCH && lunch != MIDDLE_LUNCH && lunch != LATE_LUNCH) {
                     LunchPickerFragment LunchSelector = new LunchPickerFragment();
                     LunchSelector.show(getFragmentManager(), "Unknown Lunch");
                 }
