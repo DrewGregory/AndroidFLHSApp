@@ -1,4 +1,5 @@
 package com.flhs;
+
 import com.parse.ConfigCallback;
 import com.parse.Parse;
 import com.parse.ParseConfig;
@@ -16,10 +17,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FLHSApplication extends Application {
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		//Solely for setting up Push Notifications Receiver for Parse......
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        //Solely for setting up Push Notifications Receiver for Parse......
         Parse.initialize(this, "rxnQYcc4cGE16XzZEzkjLbobtqscs8xt7bqxj40g", "83Gx5MS2NkfDeagqKsj0f6hTdVt1yzftQkIJyROF");
 
         ParsePush.subscribeInBackground("", new SaveCallback() {
@@ -48,5 +49,5 @@ public class FLHSApplication extends Application {
         Date date = new Date();
         mEditor.putInt("DATE", Integer.parseInt(new SimpleDateFormat("d").format(date)));
         mEditor.apply();
-	}
+    }
 }

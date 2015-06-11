@@ -14,6 +14,7 @@ import java.util.Calendar;
  */
 public class FLHSDatePicker extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     DatePickerDialog.OnDateSetListener mListener;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker

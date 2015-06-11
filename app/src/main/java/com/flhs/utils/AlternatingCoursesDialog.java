@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ToggleButton;
+
 import com.flhs.R;
 
 import java.util.List;
@@ -30,13 +31,13 @@ public class AlternatingCoursesDialog extends DialogFragment {
     Activity myActivity;
     int courseNum;
     View v;
-    final String[] Days = {"A","B","C","D","E","1","2","3","4","5"};
+    final String[] Days = {"A", "B", "C", "D", "E", "1", "2", "3", "4", "5"};
     ToggleButton altToggle;
     int[] PEDays;
     EditText LabName, editText;
 
 
-    public AlternatingCoursesDialog () {
+    public AlternatingCoursesDialog() {
 
     }
 
@@ -47,7 +48,6 @@ public class AlternatingCoursesDialog extends DialogFragment {
     public interface getEditText {
         EditText getEditText();
     }
-
 
 
     @Override
@@ -69,7 +69,7 @@ public class AlternatingCoursesDialog extends DialogFragment {
         final EditText secondCourseNameEditText = (EditText) v.findViewById(R.id.secondAlternatingCourseName);
         SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
 
-        builder.setPositiveButton("OK" , new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 SharedPreferences CoursePreferences = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
@@ -78,27 +78,27 @@ public class AlternatingCoursesDialog extends DialogFragment {
                 DaysAdapter secondAdapter = (DaysAdapter) secondCourseLV.getAdapter();
                 String firstCourseName = firstCourseNameEditText.getText().toString();
                 String secondCourseName = secondCourseNameEditText.getText().toString();
-                edit.putString("Course" + courseNum + "Alt 1",firstCourseName);
-                edit.putString("Course" + courseNum + "Alt 2",secondCourseName);
+                edit.putString("Course" + courseNum + "Alt 1", firstCourseName);
+                edit.putString("Course" + courseNum + "Alt 2", secondCourseName);
                 String firstCourseValues = "";
                 String secondCourseValues = "";
-                    for(int firstCourseItemPosition = 0; firstCourseItemPosition < 10; firstCourseItemPosition++) {
-                        if(firstAdapter.mItems[firstCourseItemPosition].isChecked) {
-                            String day = ParserA.parseNumToDay(firstCourseItemPosition + 1);
-                            edit.putString("Course " + courseNum + "Day" + day, firstCourseName);
-                            firstCourseValues += " " + day;
-                            if (firstCourseItemPosition == 4) {
-                                edit.putString("Course " + courseNum + "DayAdv E", firstCourseName);
-                                edit.putString("Course " + courseNum + "DayCollab E", firstCourseName);
-                            }
-                            if (firstCourseItemPosition == 9) {
-                                edit.putString("Course " + courseNum + "DayAdv 5", firstCourseName);
-                                edit.putString("Course " + courseNum + "DayCollab 5", firstCourseName);
-                            }
+                for (int firstCourseItemPosition = 0; firstCourseItemPosition < 10; firstCourseItemPosition++) {
+                    if (firstAdapter.mItems[firstCourseItemPosition].isChecked) {
+                        String day = ParserA.parseNumToDay(firstCourseItemPosition + 1);
+                        edit.putString("Course " + courseNum + "Day" + day, firstCourseName);
+                        firstCourseValues += " " + day;
+                        if (firstCourseItemPosition == 4) {
+                            edit.putString("Course " + courseNum + "DayAdv E", firstCourseName);
+                            edit.putString("Course " + courseNum + "DayCollab E", firstCourseName);
+                        }
+                        if (firstCourseItemPosition == 9) {
+                            edit.putString("Course " + courseNum + "DayAdv 5", firstCourseName);
+                            edit.putString("Course " + courseNum + "DayCollab 5", firstCourseName);
                         }
                     }
-                for(int secondCourseItemPosition = 0; secondCourseItemPosition < 10; secondCourseItemPosition++) {
-                    if(secondAdapter.mItems[secondCourseItemPosition].isChecked) {
+                }
+                for (int secondCourseItemPosition = 0; secondCourseItemPosition < 10; secondCourseItemPosition++) {
+                    if (secondAdapter.mItems[secondCourseItemPosition].isChecked) {
                         String day = ParserA.parseNumToDay(secondCourseItemPosition + 1);
                         edit.putString("Course " + courseNum + "Day" + day, secondCourseName);
                         secondCourseValues += " " + day;
@@ -133,8 +133,8 @@ public class AlternatingCoursesDialog extends DialogFragment {
         });
         //Old Adapter .....ArrayAdapter<CharSequence> DaysAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Norm_Days, android.R.layout.simple_list_item_multiple_choice);
         SharedPreferences prefs = myActivity.getSharedPreferences("CourseNames", Activity.MODE_PRIVATE);
-        String[] firstDayValues = prefs.getString("Course" + courseNum + "Alt1DayValues","").split("");
-        String[] secondDayValues = prefs.getString("Course" + courseNum + "Alt2DayValues","").split("");
+        String[] firstDayValues = prefs.getString("Course" + courseNum + "Alt1DayValues", "").split("");
+        String[] secondDayValues = prefs.getString("Course" + courseNum + "Alt2DayValues", "").split("");
         DaysAdapter mFirstDaysAdapter = new DaysAdapter(getActivity(), firstDayValues, Days);
         DaysAdapter mSecondDaysAdapter = new DaysAdapter(getActivity(), secondDayValues, Days);
         firstCourseLV.setAdapter(mFirstDaysAdapter);
@@ -163,7 +163,8 @@ public class AlternatingCoursesDialog extends DialogFragment {
         String[] values;
         ListViewHolderItem[] mItems = new ListViewHolderItem[10];
         Context context;
-        public DaysAdapter (Context context, String[] alreadyStoredDayValues, String[] normDays) {
+
+        public DaysAdapter(Context context, String[] alreadyStoredDayValues, String[] normDays) {
             super(context, R.layout.alternating_courses_lv_item, normDays);
             this.context = context;
             this.values = alreadyStoredDayValues;
@@ -177,7 +178,7 @@ public class AlternatingCoursesDialog extends DialogFragment {
                 mItems[position] = new ListViewHolderItem();
                 mItems[position].checkBox = (CheckBox) convertView.findViewById(R.id.alt_checkbox);
                 mItems[position].checkBox.setChecked(false);
-                for(String day : values)
+                for (String day : values)
                     if (day.equals(normDays[position])) {
                         mItems[position].checkBox.setChecked(true);
                         mItems[position].isChecked = true;

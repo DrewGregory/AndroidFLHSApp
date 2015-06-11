@@ -16,6 +16,7 @@ public class TempSportsActivity extends FLHSActivity {
         return super.onCreateOptionsMenu(menu);
 
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +28,6 @@ public class TempSportsActivity extends FLHSActivity {
         settings.setJavaScriptEnabled(true);
         mWebView.loadUrl("http://sportspak.swboces.org/sportspak/oecgi3.exe/O4W_GAMES_SCHEDS");
     }
-
-
-
 
 
 }

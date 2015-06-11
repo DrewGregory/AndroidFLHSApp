@@ -1,15 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:FLHS="http://schemas.android.com/apk/res/android" >
+    xmlns:FLHS="http://schemas.android.com/apk/res-auto" >
     <item
         android:id="@+id/home_icon"
         android:title="Home"
-        android:icon="@drawable/home_icon_red"
+        android:icon="@drawable/home_red"
         FLHS:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/customize_icon"
         android:title="Customize"
-        android:showAsAction="ifRoom"/>
+        FLHS:showAsAction="ifRoom"/>
 
 
 </menu>

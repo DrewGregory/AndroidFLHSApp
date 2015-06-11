@@ -8,8 +8,9 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,12 +34,12 @@ public class FLHSActivity extends Activity {
     public final String DATE = "DATE";
     ActionBarDrawerToggle mDrawerToggle;
     int[][] FLHSDays = new int[13][32];
-    final String[] Days = {"A","B","C","D","E","1","2","3","4","5"};
+    final String[] Days = {"A", "B", "C", "D", "E", "1", "2", "3", "4", "5"};
     final String[] Courses = {"Course 1", "Course 2", "Course 3", "Course 4", "Course 5", "Course 6", "Course 7", "Course 8"};
 
 
-
     CharSequence title = getTitle();
+
     class DrawerItemClickListener implements AdapterView.OnItemClickListener {
 
         @Override
@@ -82,6 +83,7 @@ public class FLHSActivity extends Activity {
             }
         }
     }
+
     public class NavDrawerArrayAdapter extends ArrayAdapter<String> {
         private final Context context;
         int SelectedItemIndex;
@@ -100,8 +102,7 @@ public class FLHSActivity extends Activity {
             TextView textView = (TextView) rowView.findViewById(R.id.label);
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             textView.setText(values[position]);
-            switch (position)
-            {
+            switch (position) {
                 case 0:
                     if (getTitle().equals("Announcements")) {
                         imageView.setImageResource(R.drawable.announcements_icon_red);
@@ -111,7 +112,7 @@ public class FLHSActivity extends Activity {
                     }
                     break;
                 case 1:
-                    if(getTitle().equals("Calendar")) {
+                    if (getTitle().equals("Calendar")) {
                         textView.setTextColor(Color.RED);
                         imageView.setImageResource(R.drawable.calendar_icon_red);
                     } else {
@@ -119,7 +120,7 @@ public class FLHSActivity extends Activity {
                     }
                     break;
                 case 2:
-                    if(getTitle().equals("Lunch Menu")) {
+                    if (getTitle().equals("Lunch Menu")) {
                         imageView.setImageResource(R.drawable.lunch_menu_red);
                         textView.setTextColor(Color.RED);
                     } else {
@@ -127,7 +128,7 @@ public class FLHSActivity extends Activity {
                     }
                     break;
                 case 3:
-                    if(getTitle().equals("Sports")) {
+                    if (getTitle().equals("Sports")) {
                         imageView.setImageResource(R.drawable.sports_icon_red);
                         textView.setTextColor(Color.RED);
                     } else {
@@ -135,7 +136,7 @@ public class FLHSActivity extends Activity {
                     }
                     break;
                 case 4:
-                    if(getTitle().equals("Bell Schedules")) {
+                    if (getTitle().equals("Bell Schedules")) {
                         imageView.setImageResource(R.drawable.schedule_red);
                         textView.setTextColor(Color.RED);
                     } else {
@@ -148,9 +149,9 @@ public class FLHSActivity extends Activity {
             return rowView;
         }
     }
+
     public static final String appname = "FLHS Info";
     ArrayAdapter<String> loadingAdapter;
-
 
 
     String[] MainActivities = {
@@ -159,12 +160,9 @@ public class FLHSActivity extends Activity {
     NavDrawerArrayAdapter navDrawerLvAdapter;
 
 
-
     ListView navlv;
 
     int SelectedNavDrawerItemIndex;
-
-
 
 
     public boolean isOnline() {
@@ -173,14 +171,14 @@ public class FLHSActivity extends Activity {
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isConnected());
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String[] LoadingStrings = {"Loading events from the internet....."};
-        loadingAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, LoadingStrings );
+        loadingAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, LoadingStrings);
 
     }
-
 
 
     @Override
@@ -189,12 +187,13 @@ public class FLHSActivity extends Activity {
         getActionBar().show();
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.info_icon:
                 Intent aboutActivityExecute = new Intent(getApplicationContext(), AboutActivity.class);
                 startActivity(aboutActivityExecute);
@@ -206,7 +205,7 @@ public class FLHSActivity extends Activity {
                 return true;
             default:
                 //Until there is something useful on that Activity....
-                Toast.makeText(getApplicationContext(), "Settings...." , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Settings....", Toast.LENGTH_LONG).show();
                 return true;
         }
     }
@@ -220,14 +219,14 @@ public class FLHSActivity extends Activity {
 
 
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.hello_world  /* "close drawer" description */
-        ) {
-
+        //mDrawerToggle = new ActionBarDrawerToggle(
+        //        this,                  /* host Activity */
+        //        mDrawerLayout,         /* DrawerLayout object */
+        //        R.drawable.ic_drawer,  /* nav drawer icon to replace 'Up' caret */
+        //        R.string.drawer_open,  /* "open drawer" description */
+        //        R.string.hello_world  /* "close drawer" description */
+        //) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.drawer_open, R.string.drawer_close) {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);

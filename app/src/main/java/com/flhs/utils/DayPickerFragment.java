@@ -15,6 +15,7 @@ import com.flhs.R;
 public class DayPickerFragment extends DialogFragment {
     int selectedDay;
     private DayPickerListener mDayPickerListener;
+
     public interface DayPickerListener {
         public void onDayPickPositiveClick(int DayNum);
     }
@@ -23,19 +24,19 @@ public class DayPickerFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Please Pick Your Day.");
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
             }
         });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 mDayPickerListener.onDayPickPositiveClick(selectedDay);
 
             }
         });
-        builder.setSingleChoiceItems(R.array.Days, -1, new DialogInterface.OnClickListener(){
+        builder.setSingleChoiceItems(R.array.Days, -1, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -44,6 +45,7 @@ public class DayPickerFragment extends DialogFragment {
         });
         return builder.create();
     }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);

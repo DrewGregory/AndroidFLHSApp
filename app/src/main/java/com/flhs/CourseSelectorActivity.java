@@ -25,7 +25,7 @@ import com.parse.ParseException;
 
 
 public class CourseSelectorActivity extends Activity implements AlternatingCoursesDialog.getEditText, AlternatingCoursesDialog.getToggleButton {
-    final String[] Days = {"A","B","C","D","E","1","2","3","4","5", "Adv E", "Adv 5", "Collab 5", "Collab E"};
+    final String[] Days = {"A", "B", "C", "D", "E", "1", "2", "3", "4", "5", "Adv E", "Adv 5", "Collab 5", "Collab E"};
     EditText[] CourseEditTexts = new EditText[8];
     ToggleButton[] CourseAltToggles = new ToggleButton[8];
     SharedPreferences CoursePreferences;
@@ -34,7 +34,7 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 seeSchedule();
                 return true;
@@ -48,11 +48,12 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
                 return true;
             default:
                 //Until there is something useful on that Activity....
-                Toast.makeText(getApplicationContext(), "Settings...." , Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Settings....", Toast.LENGTH_LONG).show();
                 return true;
         }
     }
-    public void onAltToggleClick (View v) {
+
+    public void onAltToggleClick(View v) {
         ToggleButton button = (ToggleButton) v;
         int courseNum = 0;
         switch (button.getId()) {
@@ -81,9 +82,9 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
                 courseNum = 8;
                 break;
         }
-        if(button.isChecked()) {
+        if (button.isChecked()) {
             selectedToggleButton = button;
-            button.setText("Alternating Course " + courseNum );
+            button.setText("Alternating Course " + courseNum);
             selectedEditText = CourseEditTexts[courseNum - 1];
             CourseEditTexts[courseNum - 1].setVisibility(View.GONE);
             Bundle bundle = new Bundle();
@@ -96,8 +97,6 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
             button.setText("Alt");
         }
     }
-
-
 
 
     @Override
@@ -129,10 +128,10 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         CourseAltToggles[5] = (ToggleButton) findViewById(R.id.Course6AltToggle);
         CourseAltToggles[6] = (ToggleButton) findViewById(R.id.Course7AltToggle);
         CourseAltToggles[7] = (ToggleButton) findViewById(R.id.Course8AltToggle);
-        for (int courseIndex = 0; courseIndex < CourseAltToggles.length; courseIndex++ ) {
-            if(CoursePreferences.getBoolean("Course"+ (courseIndex + 1) + "Alt", false)) {
+        for (int courseIndex = 0; courseIndex < CourseAltToggles.length; courseIndex++) {
+            if (CoursePreferences.getBoolean("Course" + (courseIndex + 1) + "Alt", false)) {
                 CourseAltToggles[courseIndex].setChecked(true);
-                CourseAltToggles[courseIndex].setText("Alternating Course " + (courseIndex + 1) );
+                CourseAltToggles[courseIndex].setText("Alternating Course " + (courseIndex + 1));
                 CourseEditTexts[courseIndex].setVisibility(View.GONE);
             }
         }
@@ -152,8 +151,8 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
 
     }
 
-    public void seeSchedule () {
-       new SeeScheduleTask().execute();
+    public void seeSchedule() {
+        new SeeScheduleTask().execute();
 
 
     }
@@ -171,6 +170,7 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
 
     private class SeeScheduleTask extends AsyncTask<Void, Void, Void> {
         ProgressBar mProgressBar;
+
         @Override
         protected void onPreExecute() {
             mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -180,8 +180,8 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         @Override
         protected Void doInBackground(Void... params) {
             SharedPreferences.Editor mEditor = CoursePreferences.edit();
-            for(int courseIndex = 0; courseIndex < CourseAltToggles.length; courseIndex++) {
-                if(!CourseAltToggles[courseIndex].isChecked()) {
+            for (int courseIndex = 0; courseIndex < CourseAltToggles.length; courseIndex++) {
+                if (!CourseAltToggles[courseIndex].isChecked()) {
                     String courseName = CourseEditTexts[courseIndex].getText().toString();
                     mEditor.putBoolean("Course" + (courseIndex + 1) + "Alt", false);
                     for (int day = 0; day < Days.length; day++) {
@@ -207,6 +207,7 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         seeSchedule();
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -214,7 +215,7 @@ public class CourseSelectorActivity extends Activity implements AlternatingCours
         return true;
     }
 
-    public void day_select (View v) {
+    public void day_select(View v) {
         View parent = (View) v.getParent();
         CheckBox checkbox = (CheckBox) v;
         try {

@@ -16,27 +16,28 @@ public class LunchMenuActivity extends FLHSActivity {
         return super.onCreateOptionsMenu(menu);
 
     }
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lunch_menu);
-		SetupNavDrawer();
-		WebView LunchMenuPDFReader = (WebView) findViewById(R.id.Lunch_Menu_Web_View);
 
-		//I skipped this part.... too lazy to check for Google Drive Viewer Consistencies..... I just put the Google Drive Viewer URL directly in
-		String PDFReaderURL = Formatter.googleDriveViewerURLFormat("http://bcsdny.org/files/filesystem/flmsflhslunchmenu1.pdf");
-		//Ok... I use the rest of this stuff now.
-		LunchMenuPDFReader.setWebViewClient(new WebViewClient());
-		WebSettings settings = LunchMenuPDFReader.getSettings();
-		settings.setJavaScriptEnabled(true);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lunch_menu);
+        SetupNavDrawer();
+        WebView LunchMenuPDFReader = (WebView) findViewById(R.id.Lunch_Menu_Web_View);
+
+        //I skipped this part.... too lazy to check for Google Drive Viewer Consistencies..... I just put the Google Drive Viewer URL directly in
+        String PDFReaderURL = Formatter.googleDriveViewerURLFormat("http://bcsdny.org/files/filesystem/flmsflhslunchmenu1.pdf");
+        //Ok... I use the rest of this stuff now.
+        LunchMenuPDFReader.setWebViewClient(new WebViewClient());
+        WebSettings settings = LunchMenuPDFReader.getSettings();
+        settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
         settings.setDisplayZoomControls(true);
         ParseConfig config = ParseConfig.getCurrentConfig();
 
-		LunchMenuPDFReader.loadUrl("http://docs.google.com/gview?embedded=true&url=" + config.getString("LunchMenuURL"));
-	}
+        LunchMenuPDFReader.loadUrl("http://docs.google.com/gview?embedded=true&url=" + config.getString("LunchMenuURL"));
+    }
 /*Just might be useful someday with UP navigation in Action Bar....
-	**
+    **
 	 * Set up the {@link android.app.ActionBar}.
 	 **
 	private void setupActionBar() {

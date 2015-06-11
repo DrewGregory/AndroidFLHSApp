@@ -3,6 +3,7 @@ package com.flhs;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import com.flhs.utils.DayPickerFragment;
 import com.flhs.utils.FLHSDatePicker;
@@ -75,8 +76,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    /* Lunch Types are 0, 1, and 2, while Day Types are 1, 2, 3, 4, 5, 6, 7, 8, 9, and 10 */
         setContentView(R.layout.activity_schedule);
         SetupNavDrawer();
         content = (ListView) findViewById(R.id.contentListView);
@@ -85,11 +84,11 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         content.setAdapter(EmptySchedule);
         prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
         Date theCurrentTime = new Date();
-        String mDate = new SimpleDateFormat("dd").format(theCurrentTime);
-        String mMonth = new SimpleDateFormat("MM").format(theCurrentTime);
+        String mDate = new SimpleDateFormat("dd", Locale.US).format(theCurrentTime);
+        String mMonth = new SimpleDateFormat("MM", Locale.US).format(theCurrentTime);
         dateButton = (Button) findViewById(R.id.ChangeDate);
         SharedPreferences.Editor dayTypeEditor = prefs.edit();
-        if (!prefs.getString("Last Time Date Changed","0").equals(mDate)) {
+        if (!prefs.getString("Last Time Date Changed", "0").equals(mDate)) {
             dayTypeEditor.putString("selMonth", mMonth);
             dayTypeEditor.putString("selDate", mDate);
         }
@@ -119,7 +118,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                         dayTypeEditor.apply();
                         break;
                     }
-
                     if (date.equals(dateButton.getText())) {
                         dayTypeEditor.putString(DAY_TYPE, jsonString.substring(jsonString.indexOf(":") + 1));
                         dayTypeEditor.commit();
@@ -133,31 +131,30 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 }
             }
         }
-        if (scheduleType.equals("Normal")) {
-            String dayType = prefs.getString(DAY_TYPE, "Unknown");
-            if (dayType.equals("Unknown")) {
-                DayTitle.setText("Day");
-            } else {
-                DayTitle.setText("Day: " + dayType);
-            }
-            if (dayType.length() >= 6) {
-                if (dayType.substring(0,3).equals("One")) {
-                    dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
-                    dayTypeEditor.commit();
-                    dayType = "One Hour Delay";
-                }
-                if (dayType.substring(0,3).equals("Two")) {
-                    dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
-                    dayTypeEditor.commit();
-                    dayType = "Two Hour Delay";
-                }
-                if (dayType.substring(0, 4).equals("Spec")) {
-                    dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
-                    dayTypeEditor.commit();
-                    dayType = "Special";
-                }
-            }
-            if (dayType.equals("Adv E") || dayType.equals("Adv 5")) {
+        String dayType = prefs.getString(DAY_TYPE, "Unknown");
+        if (dayType.equals("Unknown")) {
+            DayTitle.setText("Day");
+        } else {
+            DayTitle.setText("Day: " + dayType);
+        }
+        if (dayType.startsWith("1HD")) {
+            dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
+            dayTypeEditor.commit();
+            dayType = "One Hour Delay";
+        }
+        else if (dayType.startsWith("2HD")) {
+            dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
+            dayTypeEditor.commit();
+            dayType = "Two Hour Delay";
+        }
+        else if (dayType.startsWith("SPC")) {
+            dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
+            dayTypeEditor.commit();
+            dayType = "Special";
+        }
+        switch (dayType) {
+            case "ADVE":
+            case "ADV5": {
                 /*Switch day to E and 5 temporarily so that I can get the correct lunch setting in "lunchType.getInt(dayType, -1)"*/
                 String[] CourseScheduleToPrint = {"Unknown Schedule."};
                 String[] TimeScheduleToPrint = {"Unknown Times"};
@@ -175,15 +172,17 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                         case LATE_LUNCH:
                             CourseScheduleToPrint = advLunch3Courses;
                             TimeScheduleToPrint = advLunch3Times;
-                }
+                    }
                 } else {
                     LunchPickerFragment LunchSelector = new LunchPickerFragment();
                     LunchSelector.show(getFragmentManager(), "Unknown Lunch");
                 }
                 ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
                 content.setAdapter(adapter);
+                break;
             }
-            else if (dayType.equals("Collab E") || dayType.equals("Collab 5")) {
+            case "CLBE":
+            case "CLB5": {
                 String[] CourseScheduleToPrint = collabCourses;
                 String[] TimeScheduleToPrint = collabTimes;
                 ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
@@ -191,11 +190,13 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 DayTitle.setText("Day: " + dayType);
                 Button switchLunch = (Button) findViewById(R.id.switch_lunch);
                 switchLunch.setVisibility(View.INVISIBLE);
+                break;
             }
-            else if (dayType.equals("Special")) {
+            case "Special": {
                 DayTitle.setText("Special Day " + prefs.getString(DAY_TYPE, "Unknown"));
                 Button switchLunch = (Button) findViewById(R.id.switch_lunch);
                 switchLunch.setVisibility(View.INVISIBLE); //Switch this when you figure out lunch compatibility....
+
                 JSONArray jsonTimes = config.getJSONArray("SpecialDayTimes", null);
                 String[] TimeScheduleToPrint = new String[jsonTimes.length()];
                 JSONArray jsonCourses = config.getJSONArray("SpecialDayCourses", null);
@@ -210,8 +211,9 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 }
                 ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
                 content.setAdapter(adapter);
+                break;
             }
-            else if (dayType.equals("One Hour Delay")) {
+            case "One Hour Delay": {
                 DayTitle.setText("One Hour Delay");
                 String[] CourseScheduleToPrint = {"Unknown Schedule."};
                 String[] TimeScheduleToPrint = {"Unknown Times"};
@@ -220,7 +222,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                     dayTypeEditor.putString(DAY_TYPE, "E");
                     dayTypeEditor.apply();
                 }
-                if (day.equals("1") || day.equals("2") || day.equals("3") || day.equals("4")) {
+                else if (day.equals("1") || day.equals("2") || day.equals("3") || day.equals("4")) {
                     dayTypeEditor.putString(DAY_TYPE, "5");
                     dayTypeEditor.apply();
                 }
@@ -244,7 +246,9 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 }
                 ScheduleAdapter adapter = new ScheduleAdapter(this, CourseScheduleToPrint, TimeScheduleToPrint);
                 content.setAdapter(adapter);
-            }else if (dayType.equals("Two Hour Delay")) {
+                break;
+            }
+            case "Two Hour Delay": {
                 DayTitle.setText("Two Hour Delay");
                 String[] CourseScheduleToPrint = {"Unknown Schedule."};
                 String[] TimeScheduleToPrint = {"Unknown Times"};
@@ -270,21 +274,32 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                             break;
                     }
                 } else {
-                    if (day.equals("A") || day.equals("1")) {
-                        CourseScheduleToPrint = ParserA.setLunchOrder(day1Lunch1Courses, lunch);
-                    } else if (day.equals("B") || day.equals("2")) {
-                        CourseScheduleToPrint = ParserA.setLunchOrder(day2Lunch1Courses, lunch);
-                    } else if (day.equals("C") || day.equals("3")) {
-                        CourseScheduleToPrint = ParserA.setLunchOrder(day3Lunch1Courses, lunch);
-                    } else if (day.equals("D") || day.equals("4")) {
-                        CourseScheduleToPrint = ParserA.setLunchOrder(day4Lunch1Courses, lunch);
+                    switch (day) {
+                        case "A":
+                        case "1":
+                            CourseScheduleToPrint = ParserA.setLunchOrder(day1Lunch1Courses, lunch);
+                            break;
+                        case "B":
+                        case "2":
+                            CourseScheduleToPrint = ParserA.setLunchOrder(day2Lunch1Courses, lunch);
+                            break;
+                        case "C":
+                        case "3":
+                            CourseScheduleToPrint = ParserA.setLunchOrder(day3Lunch1Courses, lunch);
+                            break;
+                        case "D":
+                        case "4":
+                            CourseScheduleToPrint = ParserA.setLunchOrder(day4Lunch1Courses, lunch);
+                            break;
                     }
                     TimeScheduleToPrint = twoHourDelayNormalTimes; //All the times are the same for normal days; Lunch is the same length as a normal period.z
                 }
 
                 ScheduleAdapter adapter = new ScheduleAdapter(this, CourseScheduleToPrint, TimeScheduleToPrint);
                 content.setAdapter(adapter);
-            } else {
+                break;
+            }
+            default: {
                 int lunch = lunchType.getInt(dayType, -1);
                 if (lunch != -1) {
                     loadNormalSchedule(lunch, dayType);
@@ -292,18 +307,14 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                     LunchPickerFragment LunchSelector = new LunchPickerFragment();
                     LunchSelector.show(getFragmentManager(), "Unknown Lunch");
                 }
+                break;
             }
-        } else {
-            DayTitle.setText(scheduleType);
-            String[] text = {"No school today: " + scheduleType};
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, text);
-            content.setAdapter(adapter);
         }
+
         ParseConfig.getInBackground(new ConfigCallback() {
             @Override
             public void done(ParseConfig config, ParseException e) {
-                if (e == null) {
-                } else {
+                if (e != null){
                     config = ParseConfig.getCurrentConfig();
                 }
 
@@ -325,7 +336,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     public void changeDate(View v) {
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString("Last Time Day Changed", "0");
-        edit.putString("Last Time Date Changed", new SimpleDateFormat("dd").format(new Date()));
+        edit.putString("Last Time Date Changed", new SimpleDateFormat("dd", Locale.US).format(new Date()));
         FLHSDatePicker dialog = new FLHSDatePicker();
         dialog.show(getFragmentManager(), "Date Picker");
         edit.apply();
@@ -366,16 +377,16 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         if ((SchoolDay.equals("A")) || (SchoolDay.equals("1"))) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day1Lunch1Courses, Lunch);
         }
-        if (SchoolDay.equals("B") || SchoolDay.equals("2")) {
+        else if (SchoolDay.equals("B") || SchoolDay.equals("2")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day2Lunch1Courses, Lunch);
         }
-        if (SchoolDay.equals("C") || SchoolDay.equals("3")) {
+        else if (SchoolDay.equals("C") || SchoolDay.equals("3")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day3Lunch1Courses, Lunch);
         }
-        if (SchoolDay.equals("D") || SchoolDay.equals("4")) {
+        else if (SchoolDay.equals("D") || SchoolDay.equals("4")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day4Lunch1Courses, Lunch);
         }
-        if (SchoolDay.equals("E") || SchoolDay.equals("5")) {
+        else if (SchoolDay.equals("E") || SchoolDay.equals("5")) {
             CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, Lunch);
         }
         if (!(SchoolDay.equals("E") && SchoolDay.equals("5"))) {
@@ -431,7 +442,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     public void onDayPickPositiveClick(int DayNum) {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(DAY_TYPE, ParserA.parseNumToDay(DayNum));
-        editor.putString("Last Time Day Changed", new SimpleDateFormat("dd").format(new Date()));
+        editor.putString("Last Time Day Changed", new SimpleDateFormat("dd", Locale.US).format(new Date()));
         editor.apply();
         startActivity(new Intent(ScheduleActivity.this, ScheduleActivity.class));
     }
@@ -444,7 +455,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         String sMonth = String.format("%02d", ++month);
-        String sDate =  String.format("%02d",day);
+        String sDate = String.format("%02d", day);
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString("selMonth", sMonth + "");
         edit.putString("selDate", sDate + "");
@@ -471,8 +482,8 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         }
 
 
-        boolean isDuringTime (String timeRange) {
-            if(timeRange.contains("-")) {
+        boolean isDuringTime(String timeRange) {
+            if (timeRange.contains("-")) {
                 String firstTime = timeRange.substring(0, timeRange.indexOf("-")).trim();
                 String secondTime = timeRange.substring(timeRange.indexOf("-") + 1).trim();
                 int firstTimeInMin = Integer.parseInt(firstTime.substring(0, firstTime.indexOf(":"))) * 60 // Hours
@@ -509,7 +520,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             }
             mItem.courseName.setText(CoursePreferences.getString(courses[position] + "Day" + prefs.getString(DAY_TYPE, "Unknown"), courses[position]));
             mItem.courseTime.setText(times[position]);
-            if(isDuringTime(times[position]))
+            if (isDuringTime(times[position]))
                 convertView.setBackgroundColor(Color.YELLOW);
             else
                 convertView.setBackgroundColor(0);
