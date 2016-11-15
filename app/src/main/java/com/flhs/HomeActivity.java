@@ -73,7 +73,7 @@ public class HomeActivity extends FLHSActivity implements ConnectionErrorFragmen
         txtdate.setText(datestring);
         tryToConnect();
 
-        ParseConfig.getInBackground(new ConfigCallback() {
+        /*ParseConfig.getInBackground(new ConfigCallback() {
             @Override
             public void done(ParseConfig config, ParseException e) {
                 if (e == null) {
@@ -84,7 +84,7 @@ public class HomeActivity extends FLHSActivity implements ConnectionErrorFragmen
                 // Get the message from config or fallback to default value
 
             }
-        });
+        });*/
 
     }
 

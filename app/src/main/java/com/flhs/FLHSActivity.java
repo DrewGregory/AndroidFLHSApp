@@ -10,7 +10,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,11 +30,9 @@ import com.parse.ParseException;
  * Created by Drew on 10/23/2014.
  */
 public class FLHSActivity extends Activity {
-    public final String DATE = "DATE";
+
     ActionBarDrawerToggle mDrawerToggle;
-    int[][] FLHSDays = new int[13][32];
-    final String[] Days = {"A", "B", "C", "D", "E", "1", "2", "3", "4", "5"};
-    final String[] Courses = {"Course 1", "Course 2", "Course 3", "Course 4", "Course 5", "Course 6", "Course 7", "Course 8"};
+
 
 
     CharSequence title = getTitle();

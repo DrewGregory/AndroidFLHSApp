@@ -19,7 +19,8 @@
     <string name="app_version">1.0</string>
     <string name="drawer_open">FLHS Menu</string>
     <string name="drawer_close">Dont Display This</string>
-
+    <string name="parse_app_id">dRechuv2drap</string>
+    <string name="parse_client_key">t74traBeFuTr</string>
     <string-array name="lunch_items">
         <item>Early Lunch</item>
         <item>Middle Lunch</item>

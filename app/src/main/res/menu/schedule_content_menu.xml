@@ -4,12 +4,12 @@
         android:id="@+id/home_icon"
         android:title="Home"
         android:icon="@drawable/home_red"
-        FLHS:showAsAction="ifRoom" />
+        android:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/customize_icon"
         android:title="Customize"
-        FLHS:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"/>
 
 
 </menu>
