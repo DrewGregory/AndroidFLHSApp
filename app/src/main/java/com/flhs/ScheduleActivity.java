@@ -11,11 +11,8 @@ import com.flhs.utils.LunchPickerFragment;
 import com.flhs.utils.ParserA;
 import com.flhs.utils.ListViewHolderItem;
 import com.parse.ConfigCallback;
-import com.parse.GetCallback;
 import com.parse.ParseConfig;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
@@ -24,7 +21,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -74,55 +70,36 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     SharedPreferences.Editor lunchTypeEditor;
     SharedPreferences lunchType, prefs;
     ListView content;
+    String scheduleType;
     Button dateButton;
-    ParseObject config;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         SetupNavDrawer();
-        prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
         content = (ListView) findViewById(R.id.contentListView);
         String[] loadScheduleStrings = {"You don't have school today!"};
         ArrayAdapter<String> EmptySchedule = new ArrayAdapter<String>(ScheduleActivity.this, android.R.layout.simple_list_item_1, loadScheduleStrings);
         content.setAdapter(EmptySchedule);
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("ConfigObject");
-
-        query.getInBackground("HTvx9KQMmf", new GetCallback<ParseObject>() {
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    config = object;
-                    // object will be your game score
-                    Log.i("IT WORKED!", object.getBoolean("MAGIC") + " dat");
-                    loadDateSchedule();
-                    //Reason why I am running new void method is that it is in separate thread... so if I didn't put all the methods and/or resulting code here,
-                    //the other code would run asynchronously and reach a nullpointer exception.
-                } else {
-                    // something went wrong
-                    Log.i("IT DIDNT WORK!", "Whhyyyyyyy?");
-                }
-            }
-        });
-    }
-
-
-     public void loadDateSchedule() {
-         Date theCurrentTime = new Date();
-         String mDate = new SimpleDateFormat("dd", Locale.US).format(theCurrentTime);
-         String mMonth = new SimpleDateFormat("MM", Locale.US).format(theCurrentTime);
-         dateButton = (Button) findViewById(R.id.ChangeDate);
-         SharedPreferences.Editor dayTypeEditor = prefs.edit();
-         if (!prefs.getString("Last Time Date Changed", "0").equals(mDate)) {
-             dayTypeEditor.putString("selMonth", mMonth);
-             dayTypeEditor.putString("selDate", mDate);
-         }
-         lunchType = getSharedPreferences(LUNCH_TYPE, MODE_PRIVATE);
+        prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
+        Date theCurrentTime = new Date();
+        String mDate = new SimpleDateFormat("dd", Locale.US).format(theCurrentTime);
+        String mMonth = new SimpleDateFormat("MM", Locale.US).format(theCurrentTime);
+        dateButton = (Button) findViewById(R.id.ChangeDate);
+        SharedPreferences.Editor dayTypeEditor = prefs.edit();
+        if (!prefs.getString("Last Time Date Changed", "0").equals(mDate)) {
+            dayTypeEditor.putString("selMonth", mMonth);
+            dayTypeEditor.putString("selDate", mDate);
+        }
+        ParseConfig config = ParseConfig.getCurrentConfig();
+        scheduleType = config.getString("ScheduleType");
+        lunchType = getSharedPreferences(LUNCH_TYPE, MODE_PRIVATE);
         Button DayTitle = (Button) findViewById(R.id.DayTitle);
         if (!(prefs.getString("Last Time Day Changed", "0").equals(mDate))) {
             dateButton.setText(prefs.getString("selMonth", mMonth) + "/" + prefs.getString("selDate", mDate));
             boolean foundDate = false;
-            JSONArray jsonDays = config.getJSONArray("WhatDay");
+            JSONArray jsonDays = config.getJSONArray("WhatDay", null);
             if (jsonDays != null) {
                 for (int index = 0; index < jsonDays.length(); index++) {
                     String jsonString = null;
@@ -215,7 +192,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 switchLunch.setVisibility(View.INVISIBLE);
                 break;
             }
-            /* Old Special Day code.... for ParseConfig. You need to change this with the new mLab ParseObject.
             case "Special": {
                 DayTitle.setText("Special Day " + prefs.getString(DAY_TYPE, "Unknown"));
                 Button switchLunch = (Button) findViewById(R.id.switch_lunch);
@@ -236,7 +212,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
                 content.setAdapter(adapter);
                 break;
-            }*/
+            }
             case "One Hour Delay": {
                 DayTitle.setText("One Hour Delay");
                 String[] CourseScheduleToPrint = {"Unknown Schedule."};
@@ -334,6 +310,18 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 break;
             }
         }
+
+        ParseConfig.getInBackground(new ConfigCallback() {
+            @Override
+            public void done(ParseConfig config, ParseException e) {
+                if (e != null){
+                    config = ParseConfig.getCurrentConfig();
+                }
+
+                // Get the message from config or fallback to default value
+
+            }
+        });
 
     }
 
