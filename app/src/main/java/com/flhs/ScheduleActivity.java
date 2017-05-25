@@ -1,6 +1,7 @@
 package com.flhs;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -21,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,29 +40,34 @@ import org.json.JSONException;
 public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.DayPickerListener, LunchPickerFragment.LunchPickerListener, DatePickerDialog.OnDateSetListener {
     private static String LUNCH_TYPE = "Lunch Type";
     public static final String DAY_TYPE = "Day Type";
+    public static final String DAY_LETTER = "Day Letter";
     String[] twoHourDelay5EarlyLunchTimes = {"9:45 - 10:10", "10:15 - 10:40", "10:45 - 11:10", "11:15 - 11:45", "11:50 - 12:15", "12:20 - 12:45", "12:50 - 1:15", "1:20 - 1:45", "1:50 - 2:15"};
     String[] twoHourDelay5MiddleLunchTimes = {"9:45 - 10:10", "10:15 - 10:40", "10:45 - 11:10", "11:15 - 11:40", "11:45 - 12:15", "12:20 - 12:45", "12:50 - 1:15", "1:20 - 1:45", "1:50 - 2:15"};
     String[] twoHourDelay5LateLunchTimes = {"9:45 - 10:10", "10:15 - 10:40", "10:45 - 11:10", "11:15 - 11:40", "11:45 - 12:10", "12:15 - 12:45", "12:50 - 1:15", "1:20 - 1:45", "1:50 - 2:15"};
-    String[] twoHourDelayNormalTimes = {"9:45 - 10:20", "10:25 - 11:00", "11:05 - 11:40", "11:45 - 12:20", "12:25 - 1:00", "1:05 -1:40", "1:45 - 2:20"};
+    String[] twoHourDelayNormalLunchTimes = {"9:45 - 10:20", "10:25 - 11:00", "11:05 - 11:40", "11:45 - 12:20", "12:25 - 1:00", "1:05 -1:40", "1:45 - 2:20"}; //Works out to be the same regardless of lunch
+    String[] oneHourDelay5EarlyLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:09", "11:14 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
+    String[] oneHourDelay5MiddleLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:17 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
+    String[] oneHourDelay5LateLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:17 - 11:50", "11:55 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
     String[] oneHourDelayEarlyLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:09", "11:14 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
     String[] oneHourDelayMiddleLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:17 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
     String[] oneHourDelayLateLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:14 - 11:50", "11:55 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
-    String[] advLunch1Courses = {"Course 1", "Course 2", "Advisory", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 7", "Course 8"};
-    String[] advLunch2Courses = {"Course 1", "Course 2", "Advisory", "Course 3", "Course 4", "Lunch", "Course 5", "Course 6", "Course 7", "Course 8"};
-    String[] advLunch3Courses = {"Course 1", "Course 2", "Advisory", "Course 3", "Course 4", "Course 5", "Lunch", "Course 6", "Course 7", "Course 8"};
+    String[] adv5Courses = {"Course 1", "Course 2", "Advisory", "Course 3", "Course 4", "Lunch", "Course 5", "Course 6", "Course 7", "Course 8"};
+    String[] adv1Lunch2Times = {"7:45 - 8:35", "8:40 - 9:30", "9:35 - 10:00", "10:05 - 10:55", "11:00 - 11:35", "11:40 - 12:30", "12:35 - 1:25", "1:30 - 2:20"};
+    String[] adv1Lunch1Times = {"7:45 - 8:35", "8:40 - 9:30", "9:35 - 10:00", "10:05 - 10:40", "10:45 - 11:35", "11:40 - 12:30", "12:35 - 1:25", "1:30 - 2:20"};
+    String[] adv1Lunch3Times = {"7:45 - 8:35", "8:40 - 9:30", "9:35 - 10:00", "10:05 - 10:55", "11:00 - 11:50", "11:55 - 12:30", "12:35 - 1:25", "1:30 - 2:20"};
     String[] advLunch1Times = {"7:45 - 8:20", "8:25 - 9:00", "9:05 - 9:30", "9:35 - 10:10", "10:15 - 10:55", "11:00 - 11:35", "11:40 - 12:15", "12:20 - 12:55", "1:00 - 1:35", "1:40 - 2:15"};
     String[] advLunch2Times = {"7:45 - 8:20", "8:25 - 9:00", "9:05 - 9:30", "9:35 - 10:10", "10:15 - 10:50", "10:55 - 11:35", "11:40 - 12:15", "12:20 - 12:55", "1:00 - 1:35", "1:40 - 2:15"};
     String[] advLunch3Times = {"7:45 - 8:20", "8:25 - 9:00", "9:05 - 9:30", "9:35 - 10:10", "10:15 - 10:50", "10:55 - 11:30", "11:35 - 12:15", "12:20 - 12:55", "1:00 - 1:35", "1:40 - 2:15"};
     String[] collabCourses = {"Course 1", "Course 2", "Course 3", "Course 4", "Collab Learning Lunch", "Course 5", "Course 6", "Course 7", "Course 8"};
     String[] collabTimes = {"7:45 - 8:20", "8:25 - 9:00", "9:05 - 9:40", "9:45 - 10:20", "10:25 - 11:35", "11:40 - 12:15", "12:20 - 12:55", "1:00 - 1:35", "1:40 - 2:15"};
-    String[] day1Lunch1Courses = {"Course 1", "Course 2", "Lunch", "Course 4", "Course 5", "Course 7", "Course 8"};
+    String[] day1Courses = {"Course 1", "Course 2",  "Course 4", "Lunch", "Course 5", "Course 7", "Course 8"};
     String[] Lunch1Times = {"7:45 - 8:40", "8:45 - 9:40", "9:45 - 10:20", "10:25 - 11:20", "11:25 - 12:20", "12:25 - 1:20", "1:25 - 2:20"};
     String[] Lunch2Times = {"7:45 - 8:40", "8:45 - 9:40", "9:45 - 10:40", "10:45 - 11:20", "11:25 - 12:20", "12:25 - 1:20", "1:25 - 2:20"};
     String[] Lunch3Times = {"7:45 - 8:40", "8:45 - 9:40", "9:45 - 10:40", "10:45 - 11:40", "11:45 - 12:20", "12:25 - 1:20", "1:25 - 2:20"};
-    String[] day2Lunch1Courses = {"Course 1", "Course 2", "Lunch", "Course 3", "Course 6", "Course 7", "Course 8"};
-    String[] day3Lunch1Courses = {"Course 2", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 7"};
-    String[] day4Lunch1Courses = {"Course 1", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 8"};
-    String[] day5Lunch1Courses = {"Course 1", "Course 2", "Course 3", "Lunch", "Course 4", "Course 5", "Course 6", "Course 7", "Course 8"};
+    String[] day2Courses = {"Course 1", "Course 2", "Course 3", "Lunch", "Course 6", "Course 7", "Course 8"};
+    String[] day3Courses = {"Course 2", "Course 3", "Course 4", "Lunch", "Course 5", "Course 6", "Course 7"};
+    String[] day4Courses = {"Course 1", "Course 3", "Course 4", "Lunch", "Course 5", "Course 6", "Course 8"};
+    String[] day5Courses = {"Course 1", "Course 2", "Course 3", "Course 4", "Lunch", "Course 5", "Course 6", "Course 7", "Course 8"};
     String[] day5Lunch1Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:30", "10:35 - 11:15", "11:20 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
     String[] day5Lunch2Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:40", "10:45 - 11:15", "11:20 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
     String[] day5Lunch3Times = {"7:45 - 8:25", "8:30 - 9:10", "9:15 - 9:55", "10:00 - 10:40", "10:45 - 11:25", "11:30 - 12:00", "12:05 - 12:45", "12:50 - 1:30", "1:35 - 2:15"};
@@ -71,7 +78,9 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     SharedPreferences lunchType, prefs;
     ListView content;
     String scheduleType;
+    String dayLetter;
     Button dateButton;
+    ParseConfig config;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,121 +91,177 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         String[] loadScheduleStrings = {"You don't have school today!"};
         ArrayAdapter<String> EmptySchedule = new ArrayAdapter<String>(ScheduleActivity.this, android.R.layout.simple_list_item_1, loadScheduleStrings);
         content.setAdapter(EmptySchedule);
+        config = ParseConfig.getCurrentConfig();
         prefs = getSharedPreferences(DAY_TYPE, MODE_PRIVATE);
+        dateButton = (Button) findViewById(R.id.ChangeDate);
+        String dayType = getDay();
+        Button dayTitle = (Button) findViewById(R.id.DayTitle);
+        String dayTitleText = dayType;
+        dayLetter = dayType.substring(dayType.length() - 1);
+        Log.i("Day Type",dayType);
+        //"Translate" our day code stuff we put in database to normal text
+        if (dayType.equals("Unknown")) {
+            dayTitleText = "Day"; //No day set: we're beckoning the user to choose one!
+        } else if (dayType.startsWith("1HD")){
+            dayType = "1HD";
+            dayTitleText = "One Hour Delay " + dayLetter;
+        } else if (dayType.startsWith("2HD")) {
+            dayType = "2HD";
+            dayTitleText = "Two Hour Delay " + dayLetter;
+        } else if (dayType.startsWith("SPC")) {
+            //Don't trim SPC because you don't want to lose the name!
+            //TODO: Allow for naming of special days
+            dayTitleText = "Special " + dayLetter;
+        } else if (dayType.startsWith("ADV")) {
+            dayType = "ADV";
+            dayTitleText = "Advisory " + dayLetter;
+        } else if (dayType.startsWith("CLB")) {
+            dayType = "CLB";
+            dayTitleText = "Collaborative " + dayLetter;
+        }
+        dayTitle.setText(dayTitleText);
+        int lunchNum = getLunch();
+        ParseConfig.getInBackground(new ConfigCallback() {
+            @Override
+            public void done(ParseConfig config, ParseException e) {
+                if (e != null){
+                    config = ParseConfig.getCurrentConfig();
+                }
+                // Get the message from config or fallback to default value
+            }
+        });
+        loadSchedule(dayType, lunchNum);
+    }
+
+    public String[] addAdvisory (String[] originalCourses) {
+        String[] newCourses = new String[originalCourses.length + 1];
+        for (int index = 0; index < newCourses.length; index++) {
+            if (index < 2)
+                newCourses[index] = originalCourses[index];
+             else if (index == 2)
+                newCourses[2] = "Advisory";
+            else
+                newCourses[index] = originalCourses[index + 1];
+        }
+        return newCourses;
+    }
+
+    public int getLunch() {
+        lunchType = getSharedPreferences(LUNCH_TYPE, MODE_PRIVATE);
+        int lunch = lunchType.getInt(dayLetter, -1);
+        if (lunch == -1) {
+            LunchPickerFragment LunchSelector = new LunchPickerFragment();
+            LunchSelector.show(getFragmentManager(), "Unknown Lunch");
+        }
+        return lunch;
+    }
+
+    public String getDay(){
+        String dayType = "Unknown";
         Date theCurrentTime = new Date();
         String mDate = new SimpleDateFormat("dd", Locale.US).format(theCurrentTime);
         String mMonth = new SimpleDateFormat("MM", Locale.US).format(theCurrentTime);
-        dateButton = (Button) findViewById(R.id.ChangeDate);
         SharedPreferences.Editor dayTypeEditor = prefs.edit();
-        if (!prefs.getString("Last Time Date Changed", "0").equals(mDate)) {
-            dayTypeEditor.putString("selMonth", mMonth);
-            dayTypeEditor.putString("selDate", mDate);
+        if (prefs.getString("Last Time Date Changed", "0").equals(mDate)) {
+            if (prefs.getString("Priority","Date").equals("Day")) {
+                return prefs.getString(DAY_TYPE, "A");
+            }
         }
-        ParseConfig config = ParseConfig.getCurrentConfig();
         scheduleType = config.getString("ScheduleType");
-        lunchType = getSharedPreferences(LUNCH_TYPE, MODE_PRIVATE);
-        Button DayTitle = (Button) findViewById(R.id.DayTitle);
-        if (!(prefs.getString("Last Time Day Changed", "0").equals(mDate))) {
-            dateButton.setText(prefs.getString("selMonth", mMonth) + "/" + prefs.getString("selDate", mDate));
-            boolean foundDate = false;
-            JSONArray jsonDays = config.getJSONArray("WhatDay", null);
-            if (jsonDays != null) {
-                for (int index = 0; index < jsonDays.length(); index++) {
-                    String jsonString = null;
-                    try {
-                        jsonString = jsonDays.get(index).toString();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        dayTypeEditor.putString(DAY_TYPE, "Unknown");
-                    }
-                    String date = null;
-                    try {
-                        date = jsonString.substring(0, jsonString.indexOf(":"));
-                    } catch (NullPointerException ex) {
-                        ex.printStackTrace();
-                        dayTypeEditor.putString("Last Time Day Changed", mDate);
-                        dayTypeEditor.apply();
-                        break;
-                    }
-                    if (date.equals(dateButton.getText())) {
-                        dayTypeEditor.putString(DAY_TYPE, jsonString.substring(jsonString.indexOf(":") + 1));
-                        dayTypeEditor.commit();
-                        foundDate = true;
-                        break;
-                    }
+        dateButton.setText(prefs.getString("selMonth", mMonth) + "/" + prefs.getString("selDate", mDate));
+        JSONArray jsonDays = config.getJSONArray("WhatDay", null);
+        if (jsonDays != null) {
+            for (int index = 0; index < jsonDays.length(); index++) {
+                String jsonString = null;
+                try {
+                    jsonString = jsonDays.get(index).toString();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                if (!foundDate) {
-                    dayTypeEditor.putString(DAY_TYPE, "Unknown");
-                    dayTypeEditor.commit();
+                String date;
+                try {
+                    date = jsonString.substring(0, jsonString.indexOf(":"));
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                    dayTypeEditor.putString("Last Time Day Changed", mDate);
+                    dayTypeEditor.apply();
+                    break;
+                }
+                if (date.equals(dateButton.getText())) {
+                    dayType = jsonString.substring(jsonString.indexOf(":") + 1);
+                    break;
                 }
             }
         }
-        String dayType = prefs.getString(DAY_TYPE, "Unknown");
-        if (dayType.equals("Unknown")) {
-            DayTitle.setText("Day");
-        } else {
-            DayTitle.setText("Day: " + dayType);
-        }
+        dayTypeEditor.putString(DAY_TYPE, dayType);
+        dayTypeEditor.commit();
+        return dayType;
+    }
+
+    public void loadSchedule(String dayType, int lunchType) {
+        Log.i("Activity Info", dayType + " " + lunchType);
+       if (lunchType == -1) {
+           lunchType = MIDDLE_LUNCH; //To be able to instantiate schedule.
+       }
+
+        String[] courseScheduleToPrint = new String[0];
+        String[] timeScheduleToPrint = new String[0];
+        //For days that are not merely letters, we are trimming the end letter
         if (dayType.startsWith("1HD")) {
-            dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
-            dayTypeEditor.commit();
-            dayType = "One Hour Delay";
+            dayType = "1HD"; //Trim end
         }
         else if (dayType.startsWith("2HD")) {
-            dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
-            dayTypeEditor.commit();
-            dayType = "Two Hour Delay";
+            dayType = "2HD";
         }
         else if (dayType.startsWith("SPC")) {
-            dayTypeEditor.putString(DAY_TYPE, dayType.substring(dayType.length() - 1));
-            dayTypeEditor.commit();
-            dayType = "Special";
+            dayType = "SPC";
         }
         switch (dayType) {
-            case "ADVE":
-            case "ADV5": {
-                /*Switch day to E and 5 temporarily so that I can get the correct lunch setting in "lunchType.getInt(dayType, -1)"*/
-                String[] CourseScheduleToPrint = {"Unknown Schedule."};
-                String[] TimeScheduleToPrint = {"Unknown Times"};
-                int selectedLunch = lunchType.getInt(dayType, -1);
-                if (selectedLunch != -1) {
-                    switch (selectedLunch) {
+            case "ADV": {
+                if (dayLetter.equals("E") || dayLetter.equals("5")) {
+                    courseScheduleToPrint = rearrangeCoursesForLunch(addAdvisory(day5Courses), lunchType);
+                    switch (lunchType) {
                         case EARLY_LUNCH:
-                            CourseScheduleToPrint = advLunch1Courses;
-                            TimeScheduleToPrint = advLunch1Times;
+                            timeScheduleToPrint = advLunch1Times;
                             break;
                         case MIDDLE_LUNCH:
-                            CourseScheduleToPrint = advLunch2Courses;
-                            TimeScheduleToPrint = advLunch2Times;
+                            timeScheduleToPrint = advLunch2Times;
                             break;
                         case LATE_LUNCH:
-                            CourseScheduleToPrint = advLunch3Courses;
-                            TimeScheduleToPrint = advLunch3Times;
+                            timeScheduleToPrint = advLunch3Times;
                     }
                 } else {
-                    LunchPickerFragment LunchSelector = new LunchPickerFragment();
-                    LunchSelector.show(getFragmentManager(), "Unknown Lunch");
-                }
-                ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
-                content.setAdapter(adapter);
-                break;
-            }
-            case "CLBE":
-            case "CLB5": {
-                String[] CourseScheduleToPrint = collabCourses;
-                String[] TimeScheduleToPrint = collabTimes;
-                ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
-                content.setAdapter(adapter);
-                DayTitle.setText("Day: " + dayType);
-                Button switchLunch = (Button) findViewById(R.id.switch_lunch);
-                switchLunch.setVisibility(View.INVISIBLE);
-                break;
-            }
-            case "Special": {
-                DayTitle.setText("Special Day " + prefs.getString(DAY_TYPE, "Unknown"));
-                Button switchLunch = (Button) findViewById(R.id.switch_lunch);
-                switchLunch.setVisibility(View.INVISIBLE); //Switch this when you figure out lunch compatibility....
+                    switch (lunchType) {
+                        case EARLY_LUNCH:
+                            timeScheduleToPrint = adv1Lunch1Times;
+                            break;
+                        case MIDDLE_LUNCH:
+                            timeScheduleToPrint = adv1Lunch2Times;
+                            break;
+                        case LATE_LUNCH:
+                            timeScheduleToPrint = adv1Lunch3Times;
+                            break;
+                    }
 
+                    if (dayLetter.equals("1") || dayLetter.equals("A"))
+                        courseScheduleToPrint = rearrangeCoursesForLunch(addAdvisory(day1Courses), lunchType);
+                    if (dayLetter.equals("2") || dayLetter.equals("B"))
+                        courseScheduleToPrint = rearrangeCoursesForLunch(addAdvisory(day2Courses), lunchType);
+                    if (dayLetter.equals("3") || dayLetter.equals("C"))
+                        courseScheduleToPrint = rearrangeCoursesForLunch(addAdvisory(day3Courses), lunchType);
+                    if (dayLetter.equals("4") || dayLetter.equals("D"))
+                        courseScheduleToPrint = rearrangeCoursesForLunch(addAdvisory(day4Courses), lunchType);
+                }
+                break;
+            }
+            case "CLB": {
+                courseScheduleToPrint = collabCourses;
+                timeScheduleToPrint = collabTimes;
+                break;
+            }
+            case "SPC": {
+                Button switchLunch = (Button) findViewById(R.id.switch_lunch);
+                switchLunch.setVisibility(View.INVISIBLE); //Switch this when you figure out lunch compatibility...
                 JSONArray jsonTimes = config.getJSONArray("SpecialDayTimes", null);
                 String[] TimeScheduleToPrint = new String[jsonTimes.length()];
                 JSONArray jsonCourses = config.getJSONArray("SpecialDayCourses", null);
@@ -213,116 +278,193 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 content.setAdapter(adapter);
                 break;
             }
-            case "One Hour Delay": {
-                DayTitle.setText("One Hour Delay");
-                String[] CourseScheduleToPrint = {"Unknown Schedule."};
-                String[] TimeScheduleToPrint = {"Unknown Times"};
-                String day = prefs.getString(DAY_TYPE, "Unknown");
-                if (day.equals("A") || day.equals("B") || day.equals("C") || day.equals("D")) {
-                    dayTypeEditor.putString(DAY_TYPE, "E");
-                    dayTypeEditor.apply();
-                }
-                else if (day.equals("1") || day.equals("2") || day.equals("3") || day.equals("4")) {
-                    dayTypeEditor.putString(DAY_TYPE, "5");
-                    dayTypeEditor.apply();
-                }
-                int lunch = lunchType.getInt(prefs.getString(DAY_TYPE, "Unknown"), -1);
-                switch (lunch) {
-                    case EARLY_LUNCH:
-                        CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, lunch);
-                        TimeScheduleToPrint = oneHourDelayEarlyLunchTimes;
+            case "1HD": {
+                switch (dayLetter) {
+                    case "A":
+                    case "1":
+                        courseScheduleToPrint = rearrangeCoursesForLunch(day1Courses, lunchType);
                         break;
-                    case MIDDLE_LUNCH:
-                        CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, lunch);
-                        TimeScheduleToPrint = oneHourDelayMiddleLunchTimes;
+                    case "B":
+                    case "2":
+                        courseScheduleToPrint = rearrangeCoursesForLunch(day2Courses, lunchType);
                         break;
-                    case LATE_LUNCH:
-                        CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, lunch);
-                        TimeScheduleToPrint = oneHourDelayLateLunchTimes;
+                    case "C":
+                    case "3":
+                        courseScheduleToPrint = rearrangeCoursesForLunch(day3Courses, lunchType);
                         break;
-                    default:
-                        LunchPickerFragment LunchSelector = new LunchPickerFragment();
-                        LunchSelector.show(getFragmentManager(), "Unknown Lunch");
+                    case "D":
+                    case "4":
+                        courseScheduleToPrint = rearrangeCoursesForLunch(day4Courses, lunchType);
+                        break;
+                    case "5":
+                    case "E":
+                        courseScheduleToPrint = rearrangeCoursesForLunch(day5Courses, lunchType);
                 }
-                ScheduleAdapter adapter = new ScheduleAdapter(this, CourseScheduleToPrint, TimeScheduleToPrint);
-                content.setAdapter(adapter);
-                break;
-            }
-            case "Two Hour Delay": {
-                DayTitle.setText("Two Hour Delay");
-                String[] CourseScheduleToPrint = {"Unknown Schedule."};
-                String[] TimeScheduleToPrint = {"Unknown Times"};
-                String day = prefs.getString(DAY_TYPE, "Unknown");
-                int lunch = lunchType.getInt(day, -1);
-                if (lunch != EARLY_LUNCH && lunch != MIDDLE_LUNCH && lunch != LATE_LUNCH) {
-                    LunchPickerFragment LunchSelector = new LunchPickerFragment();
-                    LunchSelector.show(getFragmentManager(), "Unknown Lunch");
-                }
-                if ((day.equals("E") || day.equals("5"))) {
-                    switch (lunch) {
+                if (dayLetter.equals("E") || dayLetter.equals("5")) {
+                    switch (lunchType) {
                         case EARLY_LUNCH:
-                            TimeScheduleToPrint = twoHourDelay5EarlyLunchTimes;
-                            CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, lunch);
+                            timeScheduleToPrint = oneHourDelay5EarlyLunchTimes;
                             break;
                         case MIDDLE_LUNCH:
-                            TimeScheduleToPrint = twoHourDelay5MiddleLunchTimes;
-                            CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, lunch);
+                            timeScheduleToPrint = oneHourDelay5MiddleLunchTimes;
                             break;
                         case LATE_LUNCH:
-                            TimeScheduleToPrint = twoHourDelay5LateLunchTimes;
-                            CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, lunch);
+                            timeScheduleToPrint = oneHourDelay5LateLunchTimes;
+                    }
+                } else {
+                    switch (lunchType) {
+                        case EARLY_LUNCH:
+                            timeScheduleToPrint = oneHourDelayEarlyLunchTimes;
+                            break;
+                        case MIDDLE_LUNCH:
+                            timeScheduleToPrint = oneHourDelayMiddleLunchTimes;
+                            break;
+                        case LATE_LUNCH:
+                            timeScheduleToPrint = oneHourDelayLateLunchTimes;
+                    }
+                }
+                break;
+            }
+            case "2HD": {
+                if ((dayLetter.equals("E") || dayLetter.equals("5"))) {
+                    courseScheduleToPrint = rearrangeCoursesForLunch(day5Courses, lunchType);
+                    switch (lunchType) {
+                        case EARLY_LUNCH:
+                            timeScheduleToPrint = twoHourDelay5EarlyLunchTimes;
+                            break;
+                        case MIDDLE_LUNCH:
+                            timeScheduleToPrint = twoHourDelay5MiddleLunchTimes;
+                            break;
+                        case LATE_LUNCH:
+                            timeScheduleToPrint = twoHourDelay5LateLunchTimes;
                             break;
                     }
                 } else {
-                    switch (day) {
+                    switch (dayLetter) {
                         case "A":
                         case "1":
-                            CourseScheduleToPrint = ParserA.setLunchOrder(day1Lunch1Courses, lunch);
+                            courseScheduleToPrint = rearrangeCoursesForLunch(day1Courses, lunchType);
                             break;
                         case "B":
                         case "2":
-                            CourseScheduleToPrint = ParserA.setLunchOrder(day2Lunch1Courses, lunch);
+                            courseScheduleToPrint = rearrangeCoursesForLunch(day2Courses, lunchType);
                             break;
                         case "C":
                         case "3":
-                            CourseScheduleToPrint = ParserA.setLunchOrder(day3Lunch1Courses, lunch);
+                            courseScheduleToPrint = rearrangeCoursesForLunch(day3Courses, lunchType);
                             break;
                         case "D":
                         case "4":
-                            CourseScheduleToPrint = ParserA.setLunchOrder(day4Lunch1Courses, lunch);
+                            courseScheduleToPrint = rearrangeCoursesForLunch(day4Courses, lunchType);
                             break;
+                        case "5":
+                        case "E":
+                            courseScheduleToPrint = rearrangeCoursesForLunch(day5Courses, lunchType);
                     }
-                    TimeScheduleToPrint = twoHourDelayNormalTimes; //All the times are the same for normal days; Lunch is the same length as a normal period.z
+                   timeScheduleToPrint = twoHourDelayNormalLunchTimes; //All the times are the same for normal days; Lunch is the same length as a normal period.
                 }
-
-                ScheduleAdapter adapter = new ScheduleAdapter(this, CourseScheduleToPrint, TimeScheduleToPrint);
-                content.setAdapter(adapter);
-                break;
+              break;
             }
-            default: {
-                int lunch = lunchType.getInt(dayType, -1);
-                if (lunch != -1) {
-                    loadNormalSchedule(lunch, dayType);
-                } else {
-                    LunchPickerFragment LunchSelector = new LunchPickerFragment();
-                    LunchSelector.show(getFragmentManager(), "Unknown Lunch");
+            case "A":
+            case "1":
+                courseScheduleToPrint = rearrangeCoursesForLunch(day1Courses, lunchType);
+                switch (lunchType) {
+                    case EARLY_LUNCH:
+                        timeScheduleToPrint = Lunch1Times;
+                        break;
+                    case MIDDLE_LUNCH:
+                        timeScheduleToPrint = Lunch2Times;
+                        break;
+                    case LATE_LUNCH:
+                        timeScheduleToPrint = Lunch3Times;
+                        break;
                 }
+                break;
+            case "B":
+            case "2":
+                courseScheduleToPrint = rearrangeCoursesForLunch(day2Courses, lunchType);
+                switch (lunchType) {
+                    case EARLY_LUNCH:
+                        timeScheduleToPrint = Lunch1Times;
+                        break;
+                    case MIDDLE_LUNCH:
+                        timeScheduleToPrint = Lunch2Times;
+                        break;
+                    case LATE_LUNCH:
+                        timeScheduleToPrint = Lunch3Times;
+                        break;
+                }
+                break;
+            case "C":
+            case "3":
+                courseScheduleToPrint = rearrangeCoursesForLunch(day3Courses, lunchType);
+                switch (lunchType) {
+                    case EARLY_LUNCH:
+                        timeScheduleToPrint = Lunch1Times;
+                        break;
+                    case MIDDLE_LUNCH:
+                        timeScheduleToPrint = Lunch2Times;
+                        break;
+                    case LATE_LUNCH:
+                        timeScheduleToPrint = Lunch3Times;
+                        break;
+                }
+                break;
+            case "D":
+            case "4":
+                courseScheduleToPrint = rearrangeCoursesForLunch(day4Courses, lunchType);
+                switch (lunchType) {
+                    case EARLY_LUNCH:
+                        timeScheduleToPrint = Lunch1Times;
+                        break;
+                    case MIDDLE_LUNCH:
+                        timeScheduleToPrint = Lunch2Times;
+                        break;
+                    case LATE_LUNCH:
+                        timeScheduleToPrint = Lunch3Times;
+                        break;
+                }
+                break;
+            case "5":
+            case "E":
+                courseScheduleToPrint = rearrangeCoursesForLunch(day5Courses, lunchType);
+                switch (lunchType) {
+                    case EARLY_LUNCH:
+                        timeScheduleToPrint = day5Lunch1Times;
+                        break;
+                    case MIDDLE_LUNCH:
+                        timeScheduleToPrint = day5Lunch2Times;
+                        break;
+                    case LATE_LUNCH:
+                        timeScheduleToPrint = day5Lunch3Times;
+                        break;
+                }
+        }
+
+        ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, courseScheduleToPrint, timeScheduleToPrint);
+        content.setAdapter(adapter);
+    }
+
+    public String[] rearrangeCoursesForLunch(String[] courses,  int lunchType) {
+        int middleIndex = 0;
+        for (int index = 1; index < courses.length; index++){
+            if(courses[index].equals("Lunch")) {
+                middleIndex = index;
                 break;
             }
         }
-
-        ParseConfig.getInBackground(new ConfigCallback() {
-            @Override
-            public void done(ParseConfig config, ParseException e) {
-                if (e != null){
-                    config = ParseConfig.getCurrentConfig();
-                }
-
-                // Get the message from config or fallback to default value
-
-            }
-        });
-
+        String courseBefore = courses[middleIndex - 1];
+        String courseAfter = courses[middleIndex + 1];
+        if (lunchType == EARLY_LUNCH) {
+            courses[middleIndex - 1] = "Lunch";
+            courses[middleIndex] = courseBefore;
+            courses[middleIndex - 1] = "Lunch";
+            courses[middleIndex] = courseBefore;
+        } else if (lunchType == LATE_LUNCH) {
+            courses[middleIndex] = courseAfter;
+            courses[middleIndex + 1] = "Lunch";
+        }
+        return courses;
     }
 
     @Override
@@ -375,19 +517,19 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         String[] TimeScheduleToPrint = Lunch1Times;
         String[] CourseScheduleToPrint = null;
         if ((SchoolDay.equals("A")) || (SchoolDay.equals("1"))) {
-            CourseScheduleToPrint = ParserA.setLunchOrder(day1Lunch1Courses, Lunch);
+            CourseScheduleToPrint = ParserA.setLunchOrder(day1Courses, Lunch);
         }
         else if (SchoolDay.equals("B") || SchoolDay.equals("2")) {
-            CourseScheduleToPrint = ParserA.setLunchOrder(day2Lunch1Courses, Lunch);
+            CourseScheduleToPrint = ParserA.setLunchOrder(day2Courses, Lunch);
         }
         else if (SchoolDay.equals("C") || SchoolDay.equals("3")) {
-            CourseScheduleToPrint = ParserA.setLunchOrder(day3Lunch1Courses, Lunch);
+            CourseScheduleToPrint = ParserA.setLunchOrder(day3Courses, Lunch);
         }
         else if (SchoolDay.equals("D") || SchoolDay.equals("4")) {
-            CourseScheduleToPrint = ParserA.setLunchOrder(day4Lunch1Courses, Lunch);
+            CourseScheduleToPrint = ParserA.setLunchOrder(day4Courses, Lunch);
         }
         else if (SchoolDay.equals("E") || SchoolDay.equals("5")) {
-            CourseScheduleToPrint = ParserA.setLunchOrder(day5Lunch1Courses, Lunch);
+            CourseScheduleToPrint = ParserA.setLunchOrder(day5Courses, Lunch);
         }
         if (!(SchoolDay.equals("E") && SchoolDay.equals("5"))) {
             switch (Lunch) {
@@ -418,8 +560,6 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         if (CourseScheduleToPrint != null) {
             ScheduleAdapter adapter = new ScheduleAdapter(ScheduleActivity.this, CourseScheduleToPrint, TimeScheduleToPrint);
             content.setAdapter(adapter);
-        } else {
-
         }
     }
 
@@ -427,7 +567,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
     public void onLunchPickPositiveClick(DialogFragment dialog, int selectedLunch) {
 
         lunchTypeEditor = lunchType.edit();
-        lunchTypeEditor.putInt(prefs.getString(DAY_TYPE, "Unknown"), selectedLunch);
+        lunchTypeEditor.putInt(dayLetter, selectedLunch);
         lunchTypeEditor.apply();
         startActivity(new Intent(ScheduleActivity.this, ScheduleActivity.class));
     }
@@ -443,6 +583,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(DAY_TYPE, ParserA.parseNumToDay(DayNum));
         editor.putString("Last Time Day Changed", new SimpleDateFormat("dd", Locale.US).format(new Date()));
+        editor.putString("Priority", "Day");
         editor.apply();
         startActivity(new Intent(ScheduleActivity.this, ScheduleActivity.class));
     }
@@ -459,6 +600,8 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
         SharedPreferences.Editor edit = prefs.edit();
         edit.putString("selMonth", sMonth + "");
         edit.putString("selDate", sDate + "");
+        edit.putString("Last Time Day Changed", new SimpleDateFormat("dd", Locale.US).format(new Date()));
+        edit.putString("Priority", "Date");
         edit.apply();
         startActivity(new Intent(this, ScheduleActivity.class));
     }
@@ -479,6 +622,9 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
             this.times = Times;
             myCalendar = Calendar.getInstance();
             CoursePreferences = getSharedPreferences("CourseNames", MODE_PRIVATE);
+
+            Log.i("Courses:", Arrays.toString(Courses));
+            Log.i("Times:" , Arrays.toString(Times));
         }
 
 
@@ -518,7 +664,7 @@ public class ScheduleActivity extends FLHSActivity implements DayPickerFragment.
                 mItem = (ListViewHolderItem) convertView.getTag();
 
             }
-            mItem.courseName.setText(CoursePreferences.getString(courses[position] + "Day" + prefs.getString(DAY_TYPE, "Unknown"), courses[position]));
+            mItem.courseName.setText(CoursePreferences.getString(courses[position] + "Day" + dayLetter, courses[position]));
             mItem.courseTime.setText(times[position]);
             if (isDuringTime(times[position]))
                 convertView.setBackgroundColor(Color.YELLOW);
