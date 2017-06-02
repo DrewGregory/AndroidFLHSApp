@@ -10,12 +10,41 @@ The main package is com.flhs. This package contains another package, com.flhs.ut
 that were were made for the classes in com.flhs.
 The com.flhs classes are the Activities. Each activity is a seperate section of the app. To learn about activities.
 To learn more about how this all works, go to the Android Developer Website and start learning: http://developer.android.com/training/index.html
+
 How to use Parse Config... (remember, this affects ALL USERS!!!)
 ================================================
-Sign into parse with the push@student.bcsdny.org account.
-Go to "Core", then "Config"
-The LunchMenuURL Parameter is the URL we want to use for the Lunch Menu (http://bcsdny.org/documents.cfm?id=14.608&subid=630)
-The ScheduleType Parameter is either "Normal", "One Hour Delay", and "Two Hour Delay". All else will show "No School Today:" and whatever you put as the ScheduleType Parameter.
-The SpecialDayCourses Paramter is a JSON Array that must have the brackets ([]) surrounding all content, quotation marks surrounding every item (""), and a comma after every item (including quotation marks) except for the very last item. Don't worry: Just write Course 1-8 and it will replace that name with whatever the user set in their CourseSelectorActivity as long as you wrote "Course" (capital "C"), " " (space), and a number between 1 - 8. ex: ["Course 4", "Course 5", "Course 6"]. They must be in sequential order.
-The SpecialDayTimes Parameter is also a JSON Array and must follow the same specifications as the Special Day Courses Parameter ([] "" ,) but stores the times for each corresponding course. It should be the same length as the Special Day Courses Parameter (same number of items seperated by commas), and it should be written with the opening time (i.e. "7:40") separated by a dash surrounded by a space on eacn side (" - ") with the closing time (i.e. "8:35"). Ex: ["7:40 - 8:35", "8:40 - 9:35", "9:40 - 10:35"]
-The WhatDay Parameter is also a JSON Array and again follows the same specifications as both the SpecialDayCourses and SpecialDayTimes Parameters ([] "" ,) and stores the planned day in our rotating cycle for the date. The convention for each item is "mm/dd:D" where "mm" is two-digit month (i.e. "01" being January, "10" being October), "dd" is two-digit date (i.e. "01" being the 1st, "20" being the 20th) and "D" being the day in our cycle. Possible options for the day are: "A", "B", "C", "1", "2", "3", "4," "5, "Adv E", "Adv 5", "Collab E", "Collab 5", and "Special _" where the underscore is the day type ("A", "B", "C", etc except for "Adv E", "Adv 5", "Collab E", "Collab 5" because the app checks for only the last character.) . "Special" will use the SpecialDayCourses and SpecialDayTimes Parmaters to print the schedule content (below) and the last character in the "Special _" Key. This doesn't handle lunches really well yet.... but it will soon! :-)  Ex: "01/23:Adv E" (The Advisory E Day Schedule will be printed on January 23rd).
+1)Sign into parse database with the push@student.bcsdny.org account.
+  Go to Heroku.com, then mLab add-on
+  
+2)Go to the \_GlobalConfig collection. Edit the collection (pencil on the right-hand corner)
+
+3)The LunchMenuURL parameter is the URL we want to use for the Lunch Menu (http://bcsdny.org/documents.cfm?id=14.608&subid=630)
+
+4)The WhatDay parameter is a JSON Array of the day codes for each date. The format is the following: "MM/dd:<daycode>" Example: "04/06:E" This designates an E day on April 6th. This format is year independent: it does not regard what the year is.
+
+5)Possible day code formats (to the right of the colon)
+["A","B","C","D","E","1","2","3","4","5","ADV","CLB","1HD","2HD"]
+If you write a day code that is NOT A-E or 1-5, you must designate the letter of the day as the LAST CHARACTER.
+Example: "09/27:ADV4" -- This designates an Advisory Day 4 on September 27th.
+
+6)Special days:Some schedules will arise that do not fit one of the day codes stated above. For example, you may have an assembly. In order to store a special day schedule, you create your OWN PARAMETER that has a variable name that begins with the character "\~". Next, you separate the possible schedules for that day into "tracks." For example, half the school may have a schedule that has them go to the assembly at 9:15 - 9:45, while the other half of the school may have a schedule that has them go to the assembly at 9:50 - 10:20. Another example could be that people have different lunch blocks. When you name a track, begin the value with the character "/." Between track values, list the schedule's courses immediately followed by their corresponding time slots. Here is an example: 
+![Screenshot should be here.](https://github.com/DrewGregory/AndroidFLHSApp/blob/master/mLabParseConfig.PNG?raw=true)
+In this example, I created a special schedule entitled "Theo." The two tracks are entitled "Track 1" and "Track 2". The schedule for each track is as follows:
+
+Track 1                   Track 2
+Course 1 8:50 - 9:10      Course 6 8:50 - 9:10
+
+Course 7 9:15 - 10:32     Course 1 9:15 - 10:32
+
+Course 4 10:42 - 10:58    Course 4 10:42 - 10:58
+
+Course 3 12:34 - 1:43     Course 3 12:34 - 1:43
+
+Course 8 1:56 - 4:34      Course 8 1:56 - 4:34
+
+Users will be allowed to choose which track in a similar manner with which they can choose their lunch.
+Of course, this is a bizarre schedule. This is to show the how flexible your custom schedules can be!
+In order to reference this schedule in your WhatDayArray, merely call "\~" + [Name] + [Day Letter]
+For example: "10/12:~Theo4" would assign the "Theo" schedule on October 12th, designating the courses as a 4 day. 
+
+7)The purpose of the day letter/number on the end of the schedule is to allow the user's custom schedule names to replace the course names. For example, they may have "Band" on 4 days but "Chorus" on D days. 
