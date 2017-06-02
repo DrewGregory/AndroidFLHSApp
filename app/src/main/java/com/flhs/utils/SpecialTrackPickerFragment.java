@@ -1,22 +1,28 @@
 package com.flhs.utils;
 
-import com.flhs.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 
-public class LunchPickerFragment extends DialogFragment {
+import com.flhs.R;
 
-    private LunchPickerListener mListener;
+import java.util.ArrayList;
 
-    int selectedLunch = 0;
+/**
+ * Created by Drew Gregory on 6/1/2017.
+ */
 
-    public interface LunchPickerListener {
-        void onLunchPickPositiveClick(DialogFragment dialog, int selectedLunch);
+public class SpecialTrackPickerFragment extends DialogFragment {
+    private SpecialTrackPickerFragment.TrackPickerListener mListener;
+
+    int selectedTrack = 0;
+
+    public interface TrackPickerListener {
+        void onTrackPickPositiveClick(DialogFragment dialog, int selectedTrack);
         void onDialogNegativeClick(DialogFragment dialog);
     }
 
@@ -24,24 +30,31 @@ public class LunchPickerFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Please Pick Your Lunch.");
+        builder.setTitle("Please Pick Your Track.");
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                mListener.onDialogNegativeClick(LunchPickerFragment.this);
+                mListener.onDialogNegativeClick(SpecialTrackPickerFragment.this);
             }
         });
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
-                mListener.onLunchPickPositiveClick(LunchPickerFragment.this, selectedLunch);
+                mListener.onTrackPickPositiveClick(SpecialTrackPickerFragment.this, selectedTrack);
+
             }
         });
-        builder.setSingleChoiceItems(R.array.lunch_items, -1, new DialogInterface.OnClickListener() {
-
+        Bundle data = getArguments();
+        ArrayList<String> tracks = data.getStringArrayList("tracks");
+        Log.i("Bundles",tracks.toString());
+        String[] trackStrings = new String[tracks.size()];
+        for (int i = 0; i < trackStrings.length; i++) {
+            trackStrings[i] = tracks.get(i);
+        }
+        builder.setSingleChoiceItems(trackStrings, -1, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                selectedLunch = which;
+                selectedTrack = which;
             }
         });
         return builder.create();
@@ -52,13 +65,11 @@ public class LunchPickerFragment extends DialogFragment {
         super.onAttach(activity);
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (LunchPickerListener) activity;
+            mListener = (SpecialTrackPickerFragment.TrackPickerListener) activity;
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(activity.toString()
-                    + " must implement LunchPickerListener");
+                    + " must implement TrackPickerListener");
         }
     }
-
-
 }
