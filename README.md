@@ -30,17 +30,7 @@ Example: "09/27:ADV4" -- This designates an Advisory Day 4 on September 27th.
 6)Special days:Some schedules will arise that do not fit one of the day codes stated above. For example, you may have an assembly. In order to store a special day schedule, you create your OWN PARAMETER that has a variable name that begins with the character "\~". Next, you separate the possible schedules for that day into "tracks." For example, half the school may have a schedule that has them go to the assembly at 9:15 - 9:45, while the other half of the school may have a schedule that has them go to the assembly at 9:50 - 10:20. Another example could be that people have different lunch blocks. When you name a track, begin the value with the character "/." Between track values, list the schedule's courses immediately followed by their corresponding time slots. Here is an example: 
 ![Screenshot should be here.](https://github.com/DrewGregory/AndroidFLHSApp/blob/master/mLabParseConfig.PNG?raw=true)
 In this example, I created a special schedule entitled "Theo." The two tracks are entitled "Track 1" and "Track 2". The schedule for each track is as follows:
-
-Track 1                   Track 2
-Course 1 8:50 - 9:10      Course 6 8:50 - 9:10
-
-Course 7 9:15 - 10:32     Course 1 9:15 - 10:32
-
-Course 4 10:42 - 10:58    Course 4 10:42 - 10:58
-
-Course 3 12:34 - 1:43     Course 3 12:34 - 1:43
-
-Course 8 1:56 - 4:34      Course 8 1:56 - 4:34
+![Transcribed schedule should be here](https://github.com/DrewGregory/AndroidFLHSApp/blob/master/Transcribed%20schedule.PNG?raw=true)
 
 Users will be allowed to choose which track in a similar manner with which they can choose their lunch.
 Of course, this is a bizarre schedule. This is to show the how flexible your custom schedules can be!
