@@ -53,10 +53,9 @@ public class ScheduleActivity extends FLHSActivity implements SpecialTrackPicker
     String[] oneHourDelay5EarlyLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:09", "11:14 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
     String[] oneHourDelay5MiddleLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:17 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
     String[] oneHourDelay5LateLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:17 - 11:50", "11:55 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
-    String[] oneHourDelayEarlyLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:09", "11:14 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
-    String[] oneHourDelayMiddleLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:17 - 11:47", "11:52 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
-    String[] oneHourDelayLateLunchTimes = {"8:45 - 9:18", "9:23 - 9:56", "10:01 - 10:34", "10:39 - 11:12", "11:14 - 11:50", "11:55 - 12:25", "12:30 - 1:03", "1:08 - 1:41", "1:46 - 2:20"};
-    String[] adv5Courses = {"Course 1", "Course 2", "Advisory", "Course 3", "Course 4", "Lunch", "Course 5", "Course 6", "Course 7", "Course 8"};
+    String[] oneHourDelayEarlyLunchTimes = {"8:45 - 9:30", "9:35 - 10:20", "10:25 - 11:00","11:05 - 11:50","11:55 - 12:40","12:45 - 1:30", "1:35 - 2:20"};
+    String[] oneHourDelayMiddleLunchTimes = {"8:45 - 9:30", "9:35 - 10:20", "10:25 - 11:10","11:15 - 11:50","11:55 - 12:40","12:45 - 1:30", "1:35 - 2:20"};
+    String[] oneHourDelayLateLunchTimes = {"8:45 - 9:30", "9:35 - 10:20", "10:25 - 11:10","11:15 - 12:00","12:05 - 12:40","12:45 - 1:30", "1:35 - 2:20"};
     String[] adv1Lunch2Times = {"7:45 - 8:35", "8:40 - 9:30", "9:35 - 10:00", "10:05 - 10:55", "11:00 - 11:35", "11:40 - 12:30", "12:35 - 1:25", "1:30 - 2:20"};
     String[] adv1Lunch1Times = {"7:45 - 8:35", "8:40 - 9:30", "9:35 - 10:00", "10:05 - 10:40", "10:45 - 11:35", "11:40 - 12:30", "12:35 - 1:25", "1:30 - 2:20"};
     String[] adv1Lunch3Times = {"7:45 - 8:35", "8:40 - 9:30", "9:35 - 10:00", "10:05 - 10:55", "11:00 - 11:50", "11:55 - 12:30", "12:35 - 1:25", "1:30 - 2:20"};
@@ -116,7 +115,7 @@ public class ScheduleActivity extends FLHSActivity implements SpecialTrackPicker
         } else if (dayType.startsWith("~")) {
             //Don't trim SPC because you don't want to lose the name!
             //TODO: Allow for naming of special days
-            dayTitleText = dayType;
+            dayTitleText = dayType.substring(1); //Get rid of "~"
         } else if (dayType.startsWith("ADV")) {
             dayType = "ADV";
             dayTitleText = "Advisory " + dayLetter;
@@ -146,7 +145,7 @@ public class ScheduleActivity extends FLHSActivity implements SpecialTrackPicker
              else if (index == 2)
                 newCourses[2] = "Advisory";
             else
-                newCourses[index] = originalCourses[index + 1];
+                newCourses[index] = originalCourses[index - 1];
         }
         return newCourses;
     }
@@ -424,7 +423,7 @@ public class ScheduleActivity extends FLHSActivity implements SpecialTrackPicker
         }
         if (dayType.startsWith("~")) {//SPECIAL CUSTOM DAY
             Button switchLunch = (Button) findViewById(R.id.switch_lunch);
-            switchLunch.setText("Switch Lunch");
+
             switchLunch.setVisibility(View.VISIBLE); //Switch this when you figure out lunch compatibility...
             JSONArray scheduleArray = config.getJSONArray(dayType);
             //Determine what the different tracks are...
@@ -454,7 +453,13 @@ public class ScheduleActivity extends FLHSActivity implements SpecialTrackPicker
             });
             //Find which track we should be displaying...
             SharedPreferences specialDayPrefs = getSharedPreferences("specialTrack",MODE_PRIVATE);
-            int trackIndex = specialDayPrefs.getInt("index", 0); //The first track is the default one.
+            int trackIndex = specialDayPrefs.getInt("index", 0);
+            //The first track is the default one.
+            //In case this is from a previous special day with more tracks, check if this index exists
+            if (trackIds.size() <= trackIndex) //Not room, so let's reset it to 0.
+                trackIndex = 0;
+            //Update Switch Lunch button with current selection.
+            switchLunch.setText(tracks.get(trackIndex));
             /*Indices (in scheduleArray)
             * First Course: trackIds.get(trackIndex) + 1
             * Last Course Time: trackIds.get(trackIndex + 1) - 1
